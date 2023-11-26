@@ -1,9 +1,8 @@
 package com.salesmanagementplatform.customer.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -13,22 +12,33 @@ import java.time.LocalDateTime;
 @Table(name="customer")
 public class CustomerModel {
 
+    @NotNull(message = "Client id cannot be null")
+    @Min(value = 1, message = "the client id must be greater than or equal to 1")
     @Id
     private Long id;
 
-    @NotEmpty(message="no puede ser vacio")
+    @NotBlank(message = "'fullName' cannot be blank or null")
+    @Size(min = 3, max = 60, message = "'full name' must be between 3 and 60 characters")
     @Column(name = "fullName", length = 60, nullable = false)
     private String fullName;
 
+    @NotBlank(message = "'lastName' cannot be blank or null")
+    @Size(min = 3, max = 60, message = "'lastName' must be between 3 and 60 characters")
     @Column(name = "lastName", length = 60, nullable = false)
     private String lastName;
 
+    @NotBlank(message = "'companyName' cannot be blank or null")
+    @Size(min = 3, max = 100, message = "'companyName' must be between 3 and 100 characters")
     @Column(name = "companyName", length = 100)
     private String companyName;
 
+    @NotBlank(message = "'address' cannot be blank or null")
+    @Size(min = 3, max = 200, message = "'full name' must be between 3 and 60 characters")
     @Column(name = "address", length = 200, nullable = false)
     private String address;
 
+    @Null
+    @Size(min = 3, max = 200)
     @Column(name = "address2", length = 200)
     private String address2;
 
@@ -38,22 +48,31 @@ public class CustomerModel {
     @Column(name = "updateDate")
     private LocalDateTime updateDate;
 
+    @NotNull(message = "Telephone cannot be null")
+    @Min(value = 6, message = "the telephone must be greater than or equal to 6")
     @Column(name = "telephone", nullable = false)
     private Long telephone;
+
+    @Null
+    @Min(value = 6, message = "the telephone2 must be greater than or equal to 6")
+    @Column(name = "telephone2")
+    private Long telephone2;
 
     @Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
     @Column(name = "email", length = 80, nullable = false, unique = true)
     private String email;
 
+    @NotNull(message = "customerTypeId cannot be null")
     @ManyToOne
     @JoinColumn(name = "customerTypeId", nullable = false)
     private CustomerTypeModel customerType;
 
+    @NotNull(message = "customerCategoryId cannot be null")
     @ManyToOne
     @JoinColumn(name = "customerCategoryId", nullable = false)
     private CustomerCategoryModel customerCategory;
 
-    @NotNull(message="no puede ser vacio")
+    @NotNull(message = "customerReferenceId cannot be null")
     @ManyToOne
     @JoinColumn(name = "customerReferenceId", nullable = false)
     private CustomerReferenceModel customerReference;

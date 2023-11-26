@@ -1,5 +1,6 @@
 package com.salesmanagementplatform.customer.controller;
 
+import com.salesmanagementplatform.customer.error.DataValidation;
 import com.salesmanagementplatform.customer.model.CustomerReferenceModel;
 import com.salesmanagementplatform.customer.service.CustomerReferenceService;
 import jakarta.validation.Valid;
@@ -21,6 +22,7 @@ public class CustomerReferenceController {
     @Autowired
     CustomerReferenceService customerReferenceService;
 
+    DataValidation dataValidation = new DataValidation();
     @GetMapping
     public ResponseEntity<List<CustomerReferenceModel>> getAllCustomersReference() {
         return ResponseEntity.ok(customerReferenceService.listOfAllCustomersReference());
@@ -29,14 +31,9 @@ public class CustomerReferenceController {
     @PostMapping
     public ResponseEntity<?> saveCustomerReference(@Valid @RequestBody CustomerReferenceModel customerReferenceModel, BindingResult bindingResult)
     {
-        if (bindingResult.hasErrors())
-        {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
-        else {
-            customerReferenceService.saveCustomerReference(customerReferenceModel);
-            return ResponseEntity.status(HttpStatus.CREATED).body("The customer Reference has been created successfully.");
-        }
+        dataValidation.handleValidationError(bindingResult);
+        customerReferenceService.saveCustomerReference(customerReferenceModel);
+        return ResponseEntity.status(HttpStatus.CREATED).body("The customer Reference has been created successfully.");
     }
 
     @DeleteMapping("/{customerReferenceId}")
@@ -49,13 +46,9 @@ public class CustomerReferenceController {
     @PutMapping()
     public ResponseEntity<?> updateCustomerReference(@Valid @RequestBody CustomerReferenceModel customerReferenceModel, BindingResult bindingResult)
     {
-        if (bindingResult.hasErrors())
-        {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
-        else {
-            customerReferenceService.updateCustomerReference(customerReferenceModel);
-            return ResponseEntity.status(HttpStatus.CREATED).body("The customer Reference has been successfully modified.");
-        }
+        dataValidation.handleValidationError(bindingResult);
+        customerReferenceService.updateCustomerReference(customerReferenceModel);
+        return ResponseEntity.status(HttpStatus.CREATED).body("The customer Reference has been successfully modified.");
+
     }
 }

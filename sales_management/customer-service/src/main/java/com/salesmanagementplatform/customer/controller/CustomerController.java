@@ -1,5 +1,6 @@
 package com.salesmanagementplatform.customer.controller;
 
+import com.salesmanagementplatform.customer.error.DataValidation;
 import com.salesmanagementplatform.customer.model.CustomerModel;
 import com.salesmanagementplatform.customer.service.CustomerService;
 import jakarta.validation.Valid;
@@ -8,10 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("api/customer")
@@ -20,6 +19,8 @@ public class CustomerController {
 
     @Autowired
     CustomerService customerService;
+
+    DataValidation dataValidation = new DataValidation();
 
     @GetMapping
     public ResponseEntity<List<CustomerModel>> getAllCustomers() {
@@ -34,14 +35,9 @@ public class CustomerController {
     @PostMapping
     public ResponseEntity<?> saveCustomer(@Valid @RequestBody CustomerModel customerModel, BindingResult bindingResult)
     {
-        if (bindingResult.hasErrors())
-        {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
-        else {
-            customerService.saveCustomer(customerModel);
-            return ResponseEntity.status(HttpStatus.CREATED).body("The customer has been created successfully.");
-        }
+        dataValidation.handleValidationError(bindingResult);
+        customerService.saveCustomer(customerModel);
+        return ResponseEntity.status(HttpStatus.CREATED).body("The customer has been created successfully.");
     }
 
     @DeleteMapping("/{customerId}")
@@ -54,13 +50,8 @@ public class CustomerController {
     @PutMapping()
     public ResponseEntity<?> updateCustomer(@Valid @RequestBody CustomerModel customerModel, BindingResult bindingResult)
     {
-        if (bindingResult.hasErrors())
-        {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
-        else {
-            customerService.updateCustomer(customerModel);
-            return ResponseEntity.status(HttpStatus.CREATED).body("The customer has been successfully modified.");
-        }
+        dataValidation.handleValidationError(bindingResult);
+        customerService.updateCustomer(customerModel);
+        return ResponseEntity.status(HttpStatus.CREATED).body("The customer has been successfully modified.");
     }
 }

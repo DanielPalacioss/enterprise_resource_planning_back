@@ -1,16 +1,16 @@
 package com.salesmanagementplatform.customer.controller;
 
+import com.salesmanagementplatform.customer.error.DataValidation;
 import com.salesmanagementplatform.customer.model.CustomerTypeModel;
 import com.salesmanagementplatform.customer.service.CustomerTypeService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("api/customerType")
@@ -20,22 +20,19 @@ public class CustomerTypeController {
     @Autowired
     CustomerTypeService customerTypeService;
 
+    DataValidation dataValidation = new DataValidation();
     @GetMapping
     public ResponseEntity<List<CustomerTypeModel>> getAllCustomersType() {
         return ResponseEntity.ok(customerTypeService.listOfAllCustomersType());
     }
 
     @PostMapping
-    public ResponseEntity<?> saveCustomerType(@RequestBody CustomerTypeModel customerTypeModel, BindingResult bindingResult)
+    public ResponseEntity<?> saveCustomerType(@Valid @RequestBody CustomerTypeModel customerTypeModel, BindingResult bindingResult)
     {
-        if (bindingResult.hasErrors())
-        {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
-        else {
-            customerTypeService.saveCustomerType(customerTypeModel);
-            return ResponseEntity.status(HttpStatus.CREATED).body("The customer type has been created successfully.");
-        }
+        dataValidation.handleValidationError(bindingResult);
+        customerTypeService.saveCustomerType(customerTypeModel);
+        return ResponseEntity.status(HttpStatus.CREATED).body("The customer type has been created successfully.");
+
     }
 
     @DeleteMapping("/{customerTypeId}")
@@ -46,15 +43,11 @@ public class CustomerTypeController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateCustomerReference(@RequestBody CustomerTypeModel customerTypeModel, BindingResult bindingResult)
+    public ResponseEntity<?> updateCustomerReference(@Valid @RequestBody CustomerTypeModel customerTypeModel, BindingResult bindingResult)
     {
-        if (bindingResult.hasErrors())
-        {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
-        else {
-            customerTypeService.updateCustomerType(customerTypeModel);
-            return ResponseEntity.status(HttpStatus.CREATED).body("The customer Reference has been successfully modified.");
-        }
+        dataValidation.handleValidationError(bindingResult);
+        customerTypeService.updateCustomerType(customerTypeModel);
+        return ResponseEntity.status(HttpStatus.CREATED).body("The customer Reference has been successfully modified.");
+
     }
 }

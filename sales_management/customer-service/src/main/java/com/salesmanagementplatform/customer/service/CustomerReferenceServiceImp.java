@@ -1,5 +1,6 @@
 package com.salesmanagementplatform.customer.service;
 
+import com.salesmanagementplatform.customer.error.exceptions.RequestException;
 import com.salesmanagementplatform.customer.model.CustomerCategoryModel;
 import com.salesmanagementplatform.customer.model.CustomerReferenceModel;
 import com.salesmanagementplatform.customer.model.Status;
@@ -26,32 +27,35 @@ public class CustomerReferenceServiceImp implements CustomerReferenceService {
 
     @Override
     public List<CustomerReferenceModel> listOfAllCustomersReference() {
-        logger.info("Start search for all customers Reference ");
+        logger.info("Start search for all customer Reference ");
         return customerReferenceRepository.findAll();
     }
 
     @Override
     public void updateCustomerReference(CustomerReferenceModel updatedCustomerReference) {
-        CustomerReferenceModel customerReferenceModel = customerReferenceRepository.findById(updatedCustomerReference.getId()).orElseThrow();// -> new ResourceNotFoundException("Customer not found with id " + updatedCustomer.getId()));
+        CustomerReferenceModel customerReferenceModel = customerReferenceRepository.findById(updatedCustomerReference.getId()).orElseThrow(()-> new RequestException("Customer reference not found with id " + updatedCustomerReference.getId(),"404-Not Found"));
         customerReferenceModel.setReference(updatedCustomerReference.getReference());
         customerReferenceModel.setDescription(updatedCustomerReference.getDescription());
         customerReferenceModel.setUpdateDate(LocalDateTime.now());
+        logger.info("Start the modification of customer category");
         customerReferenceRepository.save(customerReferenceModel);
     }
 
     @Override
     public void deleteCustomerReference(Long customerReferenceId) {
-        CustomerReferenceModel customerReferenceModel = customerReferenceRepository.findById(customerReferenceId).orElseThrow();// -> new ResourceNotFoundException("Customer not found with id " + customerId));
-        Status status = statusRepository.findById(false).orElseThrow();// -> new ResourceNotFoundException("Customer not found with id " + false));
+        CustomerReferenceModel customerReferenceModel = customerReferenceRepository.findById(customerReferenceId).orElseThrow(()-> new RequestException("Customer reference not found with id " + customerReferenceId,"404-Not Found"));
+        Status status = statusRepository.findById(false).orElseThrow(() -> new RequestException("Status not found with id false", "404-Not Found"));
         customerReferenceModel.setStatus(status);
+        logger.info("Start deleting customer reference");
         customerReferenceRepository.save(customerReferenceModel);
     }
 
     @Override
     public void saveCustomerReference(CustomerReferenceModel customerReferenceModel) {
-        Status status = statusRepository.findById(true).orElseThrow();// -> new ResourceNotFoundException("Customer not found with id " + false));
+        Status status = statusRepository.findById(true).orElseThrow(() -> new RequestException("Status not found with id true", "404-Not Found"));
         customerReferenceModel.setStatus(status);
         customerReferenceModel.setCreationDate(LocalDateTime.now());
+        logger.info("Start the creation of customer reference");
         customerReferenceRepository.save(customerReferenceModel);
     }
 }

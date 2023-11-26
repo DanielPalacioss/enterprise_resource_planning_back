@@ -1,5 +1,6 @@
 package com.salesmanagementplatform.customer.service;
 
+import com.salesmanagementplatform.customer.error.exceptions.RequestException;
 import com.salesmanagementplatform.customer.model.CustomerCategoryModel;
 import com.salesmanagementplatform.customer.model.Status;
 import com.salesmanagementplatform.customer.repository.CustomerCategoryRepository;
@@ -26,32 +27,35 @@ public class CustomerCategoryServiceImp implements CustomerCategoryService {
 
     @Override
     public List<CustomerCategoryModel> listOfAllCustomersCategory() {
-        logger.info("Start search for all customers category ");
+        logger.info("Start search for all customer category");
         return customerCategoryRepository.findAll();
     }
 
     @Override
     public void updateCustomerCategory(CustomerCategoryModel updatedCustomerCategory) {
-        CustomerCategoryModel customerCategoryModel = customerCategoryRepository.findById(updatedCustomerCategory.getId()).orElseThrow();// -> new ResourceNotFoundException("Customer not found with id " + updatedCustomer.getId()));
+        CustomerCategoryModel customerCategoryModel = customerCategoryRepository.findById(updatedCustomerCategory.getId()).orElseThrow(() -> new RequestException("Customer category not found with id " + updatedCustomerCategory.getId(),"404-Not Found"));
         customerCategoryModel.setCategory(updatedCustomerCategory.getCategory());
         customerCategoryModel.setDescription(updatedCustomerCategory.getDescription());
         customerCategoryModel.setUpdateDate(LocalDateTime.now());
+        logger.info("Start the modification of customer category");
         customerCategoryRepository.save(customerCategoryModel);
     }
 
     @Override
     public void deleteCustomerCategory(Long customerCategoryId) {
-        CustomerCategoryModel customerCategoryModel = customerCategoryRepository.findById(customerCategoryId).orElseThrow();// -> new ResourceNotFoundException("Customer not found with id " + customerId));
-        Status status = statusRepository.findById(false).orElseThrow();// -> new ResourceNotFoundException("Customer not found with id " + false));
+        CustomerCategoryModel customerCategoryModel = customerCategoryRepository.findById(customerCategoryId).orElseThrow(() -> new RequestException("Customer category not found with id " + customerCategoryId,"404-Not Found"));
+        Status status = statusRepository.findById(false).orElseThrow(() -> new RequestException("Status not found with id false", "404-Not Found"));
         customerCategoryModel.setStatus(status);
+        logger.info("Start deleting customer category");
         customerCategoryRepository.save(customerCategoryModel);
     }
 
     @Override
     public void saveCustomerCategory(CustomerCategoryModel customerCategoryModel) {
-        Status status = statusRepository.findById(true).orElseThrow();// -> new ResourceNotFoundException("Customer not found with id " + false));
+        Status status = statusRepository.findById(true).orElseThrow(() -> new RequestException("Status not found with id true", "404-Not Found"));
         customerCategoryModel.setStatus(status);
         customerCategoryModel.setCreationDate(LocalDateTime.now());
+        logger.info("Start the creation of customer category");
         customerCategoryRepository.save(customerCategoryModel);
     }
 

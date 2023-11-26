@@ -1,5 +1,7 @@
 package com.salesmanagementplatform.customer.service;
 
+import com.salesmanagementplatform.customer.error.exceptions.RequestException;
+import com.salesmanagementplatform.customer.model.CustomerReferenceModel;
 import com.salesmanagementplatform.customer.model.CustomerTypeModel;
 import com.salesmanagementplatform.customer.model.Status;
 import com.salesmanagementplatform.customer.repository.CustomerTypeRepository;
@@ -25,32 +27,35 @@ public class CustomerTypeServiceImp implements CustomerTypeService{
 
     @Override
     public List<CustomerTypeModel> listOfAllCustomersType() {
-        logger.info("Start search for all customers Type ");
+        logger.info("Start search for all customers type ");
         return customerTypeRepository.findAll();
     }
 
     @Override
     public void updateCustomerType(CustomerTypeModel updatedCustomerType) {
-        CustomerTypeModel customerTypeModel = customerTypeRepository.findById(updatedCustomerType.getId()).orElseThrow();// -> new ResourceNotFoundException("Customer not found with id " + updatedCustomer.getId()));
+        CustomerTypeModel customerTypeModel = customerTypeRepository.findById(updatedCustomerType.getId()).orElseThrow(()-> new RequestException("Customer type not found with id " + updatedCustomerType.getId(),"404-Not Found"));
         customerTypeModel.setType(updatedCustomerType.getType());
         customerTypeModel.setDescription(updatedCustomerType.getDescription());
         customerTypeModel.setUpdateDate(LocalDateTime.now());
+        logger.info("Start the modification of customer type");
         customerTypeRepository.save(customerTypeModel);
     }
 
     @Override
     public void deleteCustomerType(Long customerTypeId) {
-        CustomerTypeModel customerTypeModel = customerTypeRepository.findById(customerTypeId).orElseThrow();// -> new ResourceNotFoundException("Customer not found with id " + customerId));
-        Status status = statusRepository.findById(false).orElseThrow();// -> new ResourceNotFoundException("Customer not found with id " + false));
+        CustomerTypeModel customerTypeModel = customerTypeRepository.findById(customerTypeId).orElseThrow(()-> new RequestException("Customer type not found with id " + customerTypeId,"404-Not Found"));
+        Status status = statusRepository.findById(false).orElseThrow(() -> new RequestException("Status not found with id false", "404-Not Found"));
         customerTypeModel.setStatus(status);
+        logger.info("Start deleting customer type");
         customerTypeRepository.save(customerTypeModel);
     }
 
     @Override
     public void saveCustomerType(CustomerTypeModel customerTypeModel) {
-        Status status = statusRepository.findById(true).orElseThrow();// -> new ResourceNotFoundException("Customer not found with id " + false));
+        Status status = statusRepository.findById(true).orElseThrow(() -> new RequestException("Status not found with id true", "404-Not Found"));
         customerTypeModel.setStatus(status);
         customerTypeModel.setCreationDate(LocalDateTime.now());
+        logger.info("Start the creation of customer type");
         customerTypeRepository.save(customerTypeModel);
     }
 }
