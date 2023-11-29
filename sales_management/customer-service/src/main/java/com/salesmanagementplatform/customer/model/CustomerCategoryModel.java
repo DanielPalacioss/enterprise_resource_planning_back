@@ -17,16 +17,16 @@ public class CustomerCategoryModel {
     private Long id;
 
     @NotBlank(message = "'category' cannot be blank or null")
-    @Size(max = 60, message = "'category' must be between 1 and 60 characters")
+    @Size(max = 60, min = 1, message = "'category' must be between 1 and 60 characters")
     @Column(name= "category", length = 60, nullable = false)
     private String category;
 
     @NotBlank(message = "'description' cannot be blank or null")
-    @Size(max = 250, message = "'description' must be between 1 and 250 characters")
+    @Size(max = 250, min = 10, message = "'description' must be between 10 and 250 characters")
     @Column(name = "description", length = 250, nullable = false)
     private String description;
 
-    @Column(name = "creationDate", nullable = false)
+    @Column(name = "creationDate", nullable = false, updatable = false)
     private LocalDateTime creationDate;
 
     @Column(name = "updateDate")

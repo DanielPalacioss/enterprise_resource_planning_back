@@ -37,12 +37,11 @@ public class CustomerModel {
     @Column(name = "address", length = 200, nullable = false)
     private String address;
 
-    @Null
     @Size(min = 3, max = 200)
     @Column(name = "address2", length = 200)
     private String address2;
 
-    @Column(name = "creationDate", nullable = false)
+    @Column(name = "creationDate", nullable = false, updatable = false)
     private LocalDateTime creationDate;
 
     @Column(name = "updateDate")
@@ -53,7 +52,6 @@ public class CustomerModel {
     @Column(name = "telephone", nullable = false)
     private Long telephone;
 
-    @Null
     @Min(value = 6, message = "the telephone2 must be greater than or equal to 6")
     @Column(name = "telephone2")
     private Long telephone2;
