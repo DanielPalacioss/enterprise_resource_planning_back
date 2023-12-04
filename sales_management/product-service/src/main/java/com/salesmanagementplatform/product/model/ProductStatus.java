@@ -10,6 +10,7 @@ import lombok.Data;
 @Entity
 @Table(name = "productStatus")
 public class ProductStatus {
+
     @Null(message = "The id field must be null")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
