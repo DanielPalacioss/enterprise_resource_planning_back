@@ -7,7 +7,7 @@ import java.util.List;
 public interface CustomerTypeService {
     List<CustomerTypeModel> listOfAllCustomersType();
 
-    void updateCustomerType(CustomerTypeModel customerTypeModel);
+    void updateCustomerType(CustomerTypeModel updatedCustomerType);
 
     void deleteCustomerType(Long customerTypeId);
 

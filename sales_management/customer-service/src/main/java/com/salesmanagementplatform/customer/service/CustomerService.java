@@ -9,7 +9,7 @@ public interface CustomerService {
 
     CustomerModel listCustomerById(Long customerId);
 
-    void updateCustomer(CustomerModel customerModel);
+    void updateCustomer(CustomerModel updatedCustomer);
 
     void deleteCustomer(Long customerId);
 

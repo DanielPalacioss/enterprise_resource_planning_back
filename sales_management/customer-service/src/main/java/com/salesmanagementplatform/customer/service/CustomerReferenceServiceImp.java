@@ -46,6 +46,7 @@ public class CustomerReferenceServiceImp implements CustomerReferenceService {
         CustomerReferenceModel customerReferenceModel = customerReferenceRepository.findById(customerReferenceId).orElseThrow(()-> new RequestException("Customer reference not found with id " + customerReferenceId,"404-Not Found"));
         Status status = statusRepository.findById(false).orElseThrow(() -> new RequestException("Status not found with id false", "404-Not Found"));
         customerReferenceModel.setStatus(status);
+        customerReferenceModel.setUpdateDate(LocalDateTime.now());
         logger.info("Start deleting customer reference");
         customerReferenceRepository.save(customerReferenceModel);
     }
@@ -55,6 +56,7 @@ public class CustomerReferenceServiceImp implements CustomerReferenceService {
         Status status = statusRepository.findById(true).orElseThrow(() -> new RequestException("Status not found with id true", "404-Not Found"));
         customerReferenceModel.setStatus(status);
         customerReferenceModel.setCreationDate(LocalDateTime.now());
+        customerReferenceModel.setUpdateDate(null);
         logger.info("Start the creation of customer reference");
         customerReferenceRepository.save(customerReferenceModel);
     }

@@ -24,7 +24,7 @@ public class CustomerController {
 
     @GetMapping
     public ResponseEntity<List<CustomerModel>> getAllCustomers() {
-        return (customerService.listOfAllCustomers().isEmpty()) ? ResponseEntity.noContent().header("No hay clientes", "La lista de clientes está vacía").build() : ResponseEntity.ok(customerService.listOfAllCustomers());
+        return ResponseEntity.ok(customerService.listOfAllCustomers());
     }
 
     @GetMapping("{customerId}")

@@ -8,7 +8,7 @@ import java.util.List;
 public interface CustomerCategoryService {
     List<CustomerCategoryModel> listOfAllCustomersCategory();
 
-    void updateCustomerCategory(CustomerCategoryModel customerCategoryModel);
+    void updateCustomerCategory(CustomerCategoryModel updatedCustomerCategory);
 
     void deleteCustomerCategory(Long customerCategoryId);
 

@@ -1,6 +1,6 @@
-package com.salesmanagementplatform.customer.repository;
+package com.salesmanagementplatform.product.repository;
 
-import com.salesmanagementplatform.customer.model.Status;
+import com.salesmanagementplatform.product.model.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

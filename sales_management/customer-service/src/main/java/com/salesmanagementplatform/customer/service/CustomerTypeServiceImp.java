@@ -46,6 +46,7 @@ public class CustomerTypeServiceImp implements CustomerTypeService{
         CustomerTypeModel customerTypeModel = customerTypeRepository.findById(customerTypeId).orElseThrow(()-> new RequestException("Customer type not found with id " + customerTypeId,"404-Not Found"));
         Status status = statusRepository.findById(false).orElseThrow(() -> new RequestException("Status not found with id false", "404-Not Found"));
         customerTypeModel.setStatus(status);
+        customerTypeModel.setUpdateDate(LocalDateTime.now());
         logger.info("Start deleting customer type");
         customerTypeRepository.save(customerTypeModel);
     }
@@ -55,6 +56,7 @@ public class CustomerTypeServiceImp implements CustomerTypeService{
         Status status = statusRepository.findById(true).orElseThrow(() -> new RequestException("Status not found with id true", "404-Not Found"));
         customerTypeModel.setStatus(status);
         customerTypeModel.setCreationDate(LocalDateTime.now());
+        customerTypeModel.setUpdateDate(null);
         logger.info("Start the creation of customer type");
         customerTypeRepository.save(customerTypeModel);
     }

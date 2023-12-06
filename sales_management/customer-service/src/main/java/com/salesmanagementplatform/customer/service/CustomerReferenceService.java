@@ -7,7 +7,7 @@ import java.util.List;
 public interface CustomerReferenceService {
     List<CustomerReferenceModel> listOfAllCustomersReference();
 
-    void updateCustomerReference(CustomerReferenceModel customerReferenceModel);
+    void updateCustomerReference(CustomerReferenceModel updatedCustomerReference);
 
     void deleteCustomerReference(Long customerReferenceId);
 

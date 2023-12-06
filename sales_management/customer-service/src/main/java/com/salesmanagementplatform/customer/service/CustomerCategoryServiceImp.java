@@ -46,6 +46,7 @@ public class CustomerCategoryServiceImp implements CustomerCategoryService {
         CustomerCategoryModel customerCategoryModel = customerCategoryRepository.findById(customerCategoryId).orElseThrow(() -> new RequestException("Customer category not found with id " + customerCategoryId,"404-Not Found"));
         Status status = statusRepository.findById(false).orElseThrow(() -> new RequestException("Status not found with id false", "404-Not Found"));
         customerCategoryModel.setStatus(status);
+        customerCategoryModel.setUpdateDate(LocalDateTime.now());
         logger.info("Start deleting customer category");
         customerCategoryRepository.save(customerCategoryModel);
     }
@@ -55,6 +56,7 @@ public class CustomerCategoryServiceImp implements CustomerCategoryService {
         Status status = statusRepository.findById(true).orElseThrow(() -> new RequestException("Status not found with id true", "404-Not Found"));
         customerCategoryModel.setStatus(status);
         customerCategoryModel.setCreationDate(LocalDateTime.now());
+        customerCategoryModel.setUpdateDate(null);
         logger.info("Start the creation of customer category");
         customerCategoryRepository.save(customerCategoryModel);
     }

@@ -28,7 +28,9 @@ public class CustomerServiceImp implements CustomerService{
     @Override
     public List<CustomerModel> listOfAllCustomers() {
         logger.info("Start search for all customers");
-        return customerRepository.findAll();
+        List<CustomerModel> customerModelList = customerRepository.findAll();
+        if(customerModelList.isEmpty()) throw new RequestException("La lista de cliente está vacía","buscar cod");
+        return customerModelList;
     }
 
     @Override
@@ -59,8 +61,9 @@ public class CustomerServiceImp implements CustomerService{
     @Override
     public void deleteCustomer(Long customerId) {
         CustomerModel customerModel = customerRepository.findById(customerId).orElseThrow(() -> new RequestException("Customer not found with id " + customerId, "404-Not Found"));
-        Status status = statusRepository.findById(false).orElseThrow(() -> new RequestException("Customer not found with id false", "404-Not Found"));
+        Status status = statusRepository.findById(false).orElseThrow(() -> new RequestException("Status not found with id false", "404-Not Found"));
         customerModel.setStatus(status);
+        customerModel.setUpdateDate(LocalDateTime.now());
         logger.info("Start deleting customer");
         customerRepository.save(customerModel);
     }
@@ -69,12 +72,15 @@ public class CustomerServiceImp implements CustomerService{
     public void saveCustomer(CustomerModel customerModel) {
         if(customerRepository.findById(customerModel.getId()).isEmpty())
         {
-            Status status = statusRepository.findById(true).orElseThrow(() -> new RequestException("Customer not found with id true", "404-Not Found"));
+            Status status = statusRepository.findById(true).orElseThrow(() -> new RequestException("Status not found with id true", "404-Not Found"));
             customerModel.setStatus(status);
+            customerModel.setUpdateDate(null);
             customerModel.setCreationDate(LocalDateTime.now());
             logger.info("Start the creation of customer");
             customerRepository.save(customerModel);
         }
-        throw new RequestException("The customer with id '" + customerModel.getId() +"' is already in the database", "400-Bad Request");
-    }
+        else {
+            throw new RequestException("The customer with id '" + customerModel.getId() +"' is already in the database", "400-Bad Request");
+        }
+        }
 }
