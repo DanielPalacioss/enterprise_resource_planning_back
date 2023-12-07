@@ -26,15 +26,15 @@ public class ProductCategoryServiceImp implements ProductCategoryService{
 
     @Override
     public List<ProductCategoryModel> listOfAllProductCategory() {
-        logger.info("Start search for all categories");
-        List<ProductCategoryModel> productCategoryModelList = productCategoryRepository.findAll();
-        if (productCategoryRepository.findAll().isEmpty()) throw new RequestException("La lista de categorias está vacía","buscar cod");
-        return productCategoryModelList;
+        logger.info("Start search for all product categories");
+        List<ProductCategoryModel> productCategoryList = productCategoryRepository.findAll();
+        if (productCategoryList.isEmpty()) throw new RequestException("La lista de categorias está vacía","buscar cod");
+        return productCategoryList;
     }
 
     @Override
     public ProductCategoryModel listProductCategoryById(Long productCategoryId) {
-        logger.info("starting search by category id");
+        logger.info("starting search by product category id");
         return productCategoryRepository.findById(productCategoryId).orElseThrow(() -> new RequestException("Product category not found with id " + productCategoryId,"404-Not Found"));
     }
 
@@ -44,7 +44,7 @@ public class ProductCategoryServiceImp implements ProductCategoryService{
         productCategoryModel.setCategory(updateProductCategoryModel.getCategory());
         productCategoryModel.setDescription(updateProductCategoryModel.getDescription());
         productCategoryModel.setUpdateDate(LocalDateTime.now());
-        logger.info("Start the modification of customer");
+        logger.info("Start the modification of product category");
         productCategoryRepository.save(productCategoryModel);
     }
 

@@ -3,13 +3,12 @@ package com.salesmanagementplatform.product.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Null;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "productStatus")
-public class ProductStatus {
+public class ProductStatusModel {
 
     @Null(message = "The id field must be null")
     @Id
@@ -17,7 +16,7 @@ public class ProductStatus {
     private Long id;
 
     @NotBlank(message = "status cannot be blank or null")
-    @Column(name = "status", length = 50, nullable = false)
+    @Column(name = "status", length = 50, nullable = false,unique = true)
     private String status;
 
     @NotBlank(message = "description cannot be blank or null")

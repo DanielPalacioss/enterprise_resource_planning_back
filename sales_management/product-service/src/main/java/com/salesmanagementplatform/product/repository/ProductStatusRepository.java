@@ -1,7 +1,8 @@
 package com.salesmanagementplatform.product.repository;
 
-import com.salesmanagementplatform.product.model.ProductStatus;
+import com.salesmanagementplatform.product.model.ProductStatusModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProductStatusRepository extends JpaRepository<ProductStatus, Long> {
+public interface ProductStatusRepository extends JpaRepository<ProductStatusModel, Long> {
+    ProductStatusModel finByStatus(String status);
 }

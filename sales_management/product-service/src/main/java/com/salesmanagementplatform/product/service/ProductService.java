@@ -10,7 +10,7 @@ public interface ProductService {
 
     ProductModel listProductById(int productId);
 
-    void updateProduct(ProductModel product);
+    void updateProduct(ProductModel updateProduct);
 
     void deleteProduct(int productId);
 

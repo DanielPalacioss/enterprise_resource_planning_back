@@ -23,8 +23,8 @@ public class ProductCategoryModel {
     @Column(name= "category", length = 60, nullable = false, unique = true)
     private String category;
 
-    @NotBlank(message = "'description' cannot be blank or null")
-    @Size(max = 250, min = 10, message = "'description' must be between 10 and 250 characters")
+    @NotBlank(message = "description cannot be blank or null")
+    @Size(max = 250, min = 10, message = "description must be between 10 and 250 characters")
     @Column(name = "description", length = 250, nullable = false)
     private String description;
 

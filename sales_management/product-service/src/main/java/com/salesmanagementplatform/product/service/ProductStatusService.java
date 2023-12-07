@@ -1,16 +1,16 @@
 package com.salesmanagementplatform.product.service;
 
-import com.salesmanagementplatform.product.model.ProductStatus;
+import com.salesmanagementplatform.product.model.ProductStatusModel;
 
 import java.util.List;
 
 public interface ProductStatusService {
 
-    List<ProductStatus> listOfAllProductStatus();
+    List<ProductStatusModel> listOfAllProductStatus();
 
-    void updateProductStatus(ProductStatus productStatus);
+    void updateProductStatus(ProductStatusModel productStatus);
 
     void deleteProductStatus(Long productStatusId);
 
-    void saveProductStatus(ProductStatus productStatus);
+    void saveProductStatus(ProductStatusModel productStatus);
 }

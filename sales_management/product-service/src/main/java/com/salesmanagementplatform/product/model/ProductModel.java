@@ -3,7 +3,6 @@ package com.salesmanagementplatform.product.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -37,12 +36,11 @@ public class ProductModel {
     @Column(name = "salePrice", nullable = false)
     private float salePrice;
 
-    @Null(message = "Earnings must be null")
     @Column(name = "earnings", nullable = false)
     private float earnings;
 
-    @Size(min = 1, max = 100, message = "The discount must be between 1% and 100%")
-    @Column(name = "discount")
+    @Size(min = 0, max = 100, message = "The discount must be between 1% and 100%")
+    @Column(name = "discount", columnDefinition = "FLOAT DEFAULT 0")
     private float discount;
 
     @Column(name = "priceUpdateDate")
@@ -55,10 +53,10 @@ public class ProductModel {
     private LocalDateTime creationDate;
 
     @ManyToOne
-    @JoinColumn(name = "categoryId", nullable = false)
+    @JoinColumn(name = "productCategory", nullable = false)
     private ProductCategoryModel productCategoryModel;
 
     @ManyToOne
     @JoinColumn(name = "productStatus", nullable = false)
-    private ProductStatus productStatus;
+    private ProductStatusModel productStatus;
 }
