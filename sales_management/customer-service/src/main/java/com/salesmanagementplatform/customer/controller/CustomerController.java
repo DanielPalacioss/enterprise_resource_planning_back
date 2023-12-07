@@ -22,12 +22,12 @@ public class CustomerController {
 
     DataValidation dataValidation = new DataValidation();
 
-    @GetMapping
-    public ResponseEntity<List<CustomerModel>> getAllCustomers() {
-        return ResponseEntity.ok(customerService.listOfAllCustomers());
+    @GetMapping("list/{status}")
+    public ResponseEntity<List<CustomerModel>> getAllCustomers(@PathVariable String status) {
+        return ResponseEntity.ok(customerService.listOfAllCustomers(status));
     }
 
-    @GetMapping("{customerId}")
+    @GetMapping("/{customerId}")
     public ResponseEntity<CustomerModel> getCustomerById(@PathVariable Long customerId) {
         return ResponseEntity.ok(customerService.listCustomerById(customerId));
     }

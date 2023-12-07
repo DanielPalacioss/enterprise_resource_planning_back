@@ -5,7 +5,7 @@ import com.salesmanagementplatform.customer.model.CustomerModel;
 import java.util.List;
 
 public interface CustomerService {
-    List<CustomerModel> listOfAllCustomers();
+    List<CustomerModel> listOfAllCustomers(String status);
 
     CustomerModel listCustomerById(Long customerId);
 

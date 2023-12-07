@@ -5,7 +5,7 @@ import com.salesmanagementplatform.customer.model.CustomerTypeModel;
 import java.util.List;
 
 public interface CustomerTypeService {
-    List<CustomerTypeModel> listOfAllCustomersType();
+    List<CustomerTypeModel> listOfAllCustomersType(String status);
 
     void updateCustomerType(CustomerTypeModel updatedCustomerType);
 

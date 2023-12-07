@@ -1,7 +1,6 @@
 package com.salesmanagementplatform.customer.service;
 
 import com.salesmanagementplatform.customer.error.exceptions.RequestException;
-import com.salesmanagementplatform.customer.model.CustomerCategoryModel;
 import com.salesmanagementplatform.customer.model.CustomerReferenceModel;
 import com.salesmanagementplatform.customer.model.Status;
 import com.salesmanagementplatform.customer.repository.CustomerReferenceRepository;
@@ -11,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,9 +26,13 @@ public class CustomerReferenceServiceImp implements CustomerReferenceService {
 
 
     @Override
-    public List<CustomerReferenceModel> listOfAllCustomersReference() {
+    public List<CustomerReferenceModel> listOfAllCustomersReference(String status) {
         logger.info("Start search for all customer Reference ");
-        return customerReferenceRepository.findAll();
+        List<CustomerReferenceModel> customerReferenceList= new ArrayList<CustomerReferenceModel>();
+        if(status.equalsIgnoreCase("active")) customerReferenceList= customerReferenceRepository.findAllByStatus_Id(true);
+        else if (status.equalsIgnoreCase("inactive")) customerReferenceList= customerReferenceRepository.findAllByStatus_Id(false);
+        if(customerReferenceList.isEmpty()) throw new RequestException("La lista de referencia de clientes está vacía","buscar cod");
+        return customerReferenceList;
     }
 
     @Override

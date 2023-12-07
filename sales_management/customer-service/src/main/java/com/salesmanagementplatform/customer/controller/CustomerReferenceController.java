@@ -23,9 +23,9 @@ public class CustomerReferenceController {
     CustomerReferenceService customerReferenceService;
 
     DataValidation dataValidation = new DataValidation();
-    @GetMapping
-    public ResponseEntity<List<CustomerReferenceModel>> getAllCustomersReference() {
-        return ResponseEntity.ok(customerReferenceService.listOfAllCustomersReference());
+    @GetMapping("/{status}")
+    public ResponseEntity<List<CustomerReferenceModel>> getAllCustomersReference(@PathVariable String status) {
+        return ResponseEntity.ok(customerReferenceService.listOfAllCustomersReference(status));
     }
 
     @PostMapping

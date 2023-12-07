@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,11 +27,13 @@ public class CustomerServiceImp implements CustomerService{
 
 
     @Override
-    public List<CustomerModel> listOfAllCustomers() {
+    public List<CustomerModel> listOfAllCustomers(String status) {
         logger.info("Start search for all customers");
-        List<CustomerModel> customerModelList = customerRepository.findAll();
-        if(customerModelList.isEmpty()) throw new RequestException("La lista de cliente está vacía","buscar cod");
-        return customerModelList;
+        List<CustomerModel> customerList= new ArrayList<CustomerModel>();
+        if(status.equalsIgnoreCase("active")) customerList= customerRepository.findAllByStatus_Id(true);
+        else if (status.equalsIgnoreCase("inactive")) customerList= customerRepository.findAllByStatus_Id(false);
+        if(customerList.isEmpty()) throw new RequestException("La lista de clientes está vacía","buscar cod");
+        return customerList;
     }
 
     @Override

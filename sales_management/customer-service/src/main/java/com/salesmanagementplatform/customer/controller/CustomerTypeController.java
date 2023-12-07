@@ -21,9 +21,9 @@ public class CustomerTypeController {
     CustomerTypeService customerTypeService;
 
     DataValidation dataValidation = new DataValidation();
-    @GetMapping
-    public ResponseEntity<List<CustomerTypeModel>> getAllCustomersType() {
-        return ResponseEntity.ok(customerTypeService.listOfAllCustomersType());
+    @GetMapping("/{status}")
+    public ResponseEntity<List<CustomerTypeModel>> getAllCustomersType(@PathVariable String status) {
+        return ResponseEntity.ok(customerTypeService.listOfAllCustomersType(status));
     }
 
     @PostMapping

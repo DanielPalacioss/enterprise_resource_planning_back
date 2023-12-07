@@ -1,7 +1,6 @@
 package com.salesmanagementplatform.customer.service;
 
 import com.salesmanagementplatform.customer.error.exceptions.RequestException;
-import com.salesmanagementplatform.customer.model.CustomerReferenceModel;
 import com.salesmanagementplatform.customer.model.CustomerTypeModel;
 import com.salesmanagementplatform.customer.model.Status;
 import com.salesmanagementplatform.customer.repository.CustomerTypeRepository;
@@ -11,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,9 +26,13 @@ public class CustomerTypeServiceImp implements CustomerTypeService{
 
 
     @Override
-    public List<CustomerTypeModel> listOfAllCustomersType() {
+    public List<CustomerTypeModel> listOfAllCustomersType(String status) {
         logger.info("Start search for all customers type ");
-        return customerTypeRepository.findAll();
+        List<CustomerTypeModel> customerTypeList= new ArrayList<CustomerTypeModel>();
+        if(status.equalsIgnoreCase("active")) customerTypeList= customerTypeRepository.findAllByStatus_Id(true);
+        else if (status.equalsIgnoreCase("inactive")) customerTypeList= customerTypeRepository.findAllByStatus_Id(false);
+        if(customerTypeList.isEmpty()) throw new RequestException("La lista de tipos de clientes está vacía","buscar cod");
+        return customerTypeList;
     }
 
     @Override

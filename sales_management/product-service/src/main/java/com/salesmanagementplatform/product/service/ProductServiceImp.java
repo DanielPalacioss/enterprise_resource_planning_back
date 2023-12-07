@@ -66,7 +66,7 @@ public class ProductServiceImp implements ProductService{
     public void deleteProduct(int productId) {
         ProductModel product = productRepository.findById(productId).orElseThrow(() -> new RequestException("Product not found with id " + productId,"404-Not Found"));
         ProductStatusModel productStatusModel = productStatusRepository.finByStatus("deleted");
-        if(productStatusModel == null) throw new RequestException("Status not found with id false", "404-Not Found");
+        if(productStatusModel == null) throw new RequestException("Status not found with status: deleted", "404-Not Found");
         product.setProductStatus(productStatusModel);
         productRepository.save(product);
     }

@@ -6,7 +6,7 @@ import com.salesmanagementplatform.customer.model.CustomerCategoryModel;
 import java.util.List;
 
 public interface CustomerCategoryService {
-    List<CustomerCategoryModel> listOfAllCustomersCategory();
+    List<CustomerCategoryModel> listOfAllCustomersCategory(String status);
 
     void updateCustomerCategory(CustomerCategoryModel updatedCustomerCategory);
 

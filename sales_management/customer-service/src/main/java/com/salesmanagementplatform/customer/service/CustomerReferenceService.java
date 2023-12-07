@@ -5,7 +5,7 @@ import com.salesmanagementplatform.customer.model.CustomerReferenceModel;
 import java.util.List;
 
 public interface CustomerReferenceService {
-    List<CustomerReferenceModel> listOfAllCustomersReference();
+    List<CustomerReferenceModel> listOfAllCustomersReference(String status);
 
     void updateCustomerReference(CustomerReferenceModel updatedCustomerReference);
 
