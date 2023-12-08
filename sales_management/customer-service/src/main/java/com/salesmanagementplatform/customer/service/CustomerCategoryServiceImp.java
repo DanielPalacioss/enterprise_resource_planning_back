@@ -30,9 +30,9 @@ public class CustomerCategoryServiceImp implements CustomerCategoryService {
     public List<CustomerCategoryModel> listOfAllCustomersCategory(String status) {
         logger.info("Start search for all customer category");
         List<CustomerCategoryModel> customerCategoryList= new ArrayList<CustomerCategoryModel>();
-        if(status.equalsIgnoreCase("active")) customerCategoryList= customerCategoryRepository.findAllByStatus_Id(true);
-        else if (status.equalsIgnoreCase("inactive")) customerCategoryList= customerCategoryRepository.findAllByStatus_Id(false);
-        if(customerCategoryList.isEmpty()) throw new RequestException("La lista de categoria de clientes está vacía","buscar cod");
+        if(status.replaceAll(" ","").equalsIgnoreCase("active")) customerCategoryList= customerCategoryRepository.findAllByStatus_Id(true);
+        else if (status.replaceAll(" ","").equalsIgnoreCase("inactive")) customerCategoryList= customerCategoryRepository.findAllByStatus_Id(false);
+        if(customerCategoryList.isEmpty()) throw new RequestException("La lista de categoria de clientes en estado '"+status+"' está vacía","100-Continue");
         return customerCategoryList;
     }
 

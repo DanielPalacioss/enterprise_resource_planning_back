@@ -29,9 +29,9 @@ public class CustomerTypeServiceImp implements CustomerTypeService{
     public List<CustomerTypeModel> listOfAllCustomersType(String status) {
         logger.info("Start search for all customers type ");
         List<CustomerTypeModel> customerTypeList= new ArrayList<CustomerTypeModel>();
-        if(status.equalsIgnoreCase("active")) customerTypeList= customerTypeRepository.findAllByStatus_Id(true);
-        else if (status.equalsIgnoreCase("inactive")) customerTypeList= customerTypeRepository.findAllByStatus_Id(false);
-        if(customerTypeList.isEmpty()) throw new RequestException("La lista de tipos de clientes está vacía","buscar cod");
+        if(status.replaceAll(" ","").equalsIgnoreCase("active")) customerTypeList= customerTypeRepository.findAllByStatus_Id(true);
+        else if (status.replaceAll(" ","").equalsIgnoreCase("inactive")) customerTypeList= customerTypeRepository.findAllByStatus_Id(false);
+        if(customerTypeList.isEmpty()) throw new RequestException("La lista de tipos de clientes en estado '"+status+"' está vacía","100-Continue");
         return customerTypeList;
     }
 

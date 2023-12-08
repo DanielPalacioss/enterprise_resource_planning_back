@@ -3,6 +3,7 @@ package com.salesmanagementplatform.product.service;
 import com.salesmanagementplatform.product.error.exceptions.RequestException;
 import com.salesmanagementplatform.product.model.ProductModel;
 import com.salesmanagementplatform.product.model.ProductStatusModel;
+import com.salesmanagementplatform.product.repository.ProductCategoryRepository;
 import com.salesmanagementplatform.product.repository.ProductRepository;
 import com.salesmanagementplatform.product.repository.ProductStatusRepository;
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,17 +21,23 @@ public class ProductServiceImp implements ProductService{
 
     private final ProductRepository productRepository;
     private final ProductStatusRepository productStatusRepository;
+    private final ProductCategoryRepository productCategoryRepository;
 
-    public ProductServiceImp(ProductRepository productRepository, ProductStatusRepository productStatusRepository) {
+    public ProductServiceImp(ProductRepository productRepository, ProductStatusRepository productStatusRepository, ProductCategoryRepository productCategoryRepository) {
         this.productRepository = productRepository;
         this.productStatusRepository = productStatusRepository;
+        this.productCategoryRepository = productCategoryRepository;
     }
 
     @Override
-    public List<ProductModel> listOfAllProduct() {
+    public List<ProductModel> listOfAllProduct(String status) {
         logger.info("Start search for all products");
-        List<ProductModel> productList = productRepository.findAll();
-        if(productList.isEmpty()) throw new RequestException("La lista de productos está vacía","buscar cod");
+        List<ProductModel> productList = new ArrayList<ProductModel>();
+        if(status.replaceAll(" ","").equalsIgnoreCase("OnStandBy")) productList = productRepository.findAllByProductStatus_status("onstandby");
+        else if(status.replaceAll(" ","").equalsIgnoreCase("Available")) productList = productRepository.findAllByProductStatus_status("available");
+        else if(status.replaceAll(" ","").equalsIgnoreCase("Outofstock")) productList = productRepository.findAllByProductStatus_status("outofstock");
+        else if(status.replaceAll(" ","").equalsIgnoreCase("Deleted")) productList = productRepository.findAllByProductStatus_status("deleted");
+        if(productList.isEmpty()) throw new RequestException("La lista de productos en estado '"+status+"' está vacía","100-Continue");
         return productList;
     }
 
@@ -49,14 +57,7 @@ public class ProductServiceImp implements ProductService{
         product.setSalePrice(updateProduct.getSalePrice());
         product.setProductCategoryModel(updateProduct.getProductCategoryModel());
         product.setUpdateDate(LocalDateTime.now());
-        if(updateProduct.getDiscount() > 0)
-        {
-            float earnings = ((updateProduct.getSalePrice()*updateProduct.getDiscount())/100)-updateProduct.getCostPrice();
-            product.setEarnings(earnings);
-        }
-        else {
-            product.setEarnings(updateProduct.getSalePrice()-updateProduct.getCostPrice());
-        }
+        product.earnings();
         if(product.getCostPrice() != updateProduct.getCostPrice()) product.setPriceUpdateDate(LocalDateTime.now());
         logger.info("Start the modification of product");
         productRepository.save(product);
@@ -65,7 +66,7 @@ public class ProductServiceImp implements ProductService{
     @Override
     public void deleteProduct(int productId) {
         ProductModel product = productRepository.findById(productId).orElseThrow(() -> new RequestException("Product not found with id " + productId,"404-Not Found"));
-        ProductStatusModel productStatusModel = productStatusRepository.finByStatus("deleted");
+        ProductStatusModel productStatusModel = productStatusRepository.findByStatus("deleted");
         if(productStatusModel == null) throw new RequestException("Status not found with status: deleted", "404-Not Found");
         product.setProductStatus(productStatusModel);
         productRepository.save(product);
@@ -73,6 +74,23 @@ public class ProductServiceImp implements ProductService{
 
     @Override
     public void saveProduct(ProductModel product) {
+        if(productRepository.findById(product.getProductNumber()).isEmpty())
+        {
+            if(productStatusRepository.findAll().isEmpty()) throw new RequestException("No product status created","404-Bad Request");
+            if(productCategoryRepository.findAll().isEmpty()) throw new RequestException("No product category created","404-Bad Request");
+            product.setCreationDate(LocalDateTime.now());
+            product.setUpdateDate(null);
+            product.setPriceUpdateDate(null);
+            product.earnings();
+            ProductStatusModel productStatusModel = productStatusRepository.findByStatus("onstandby");
+            if(productStatusModel == null) throw new RequestException("Status not found with status: deleted", "404-Not Found");
+            product.setProductStatus(productStatusModel);
+            logger.info("Start the creation of product");
+            productRepository.save(product);
+        }
+        else {
+            throw new RequestException("The product with id '" + product.getProductNumber() +"' is already in the database", "400-Bad Request");
+        }
 
     }
 }

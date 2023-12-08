@@ -2,7 +2,6 @@ package com.salesmanagementplatform.product.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -11,11 +10,10 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "productStock")
 public class ProductStockModel {
-
-    @Null(message = "The id field must be null")
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @NotNull(message = "quantity cannot be null")
     @Column(name = "quantity", nullable = false)
@@ -28,6 +26,6 @@ public class ProductStockModel {
     private LocalDateTime updateDate;
 
     @OneToOne
-    @JoinColumn(name = "productId", nullable = false)
-    private ProductModel productModel;
+    @JoinColumn(name = "product", nullable = false, updatable = false)
+    private ProductModel product;
 }

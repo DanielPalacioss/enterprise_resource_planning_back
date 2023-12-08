@@ -29,9 +29,9 @@ public class CustomerReferenceServiceImp implements CustomerReferenceService {
     public List<CustomerReferenceModel> listOfAllCustomersReference(String status) {
         logger.info("Start search for all customer Reference ");
         List<CustomerReferenceModel> customerReferenceList= new ArrayList<CustomerReferenceModel>();
-        if(status.equalsIgnoreCase("active")) customerReferenceList= customerReferenceRepository.findAllByStatus_Id(true);
-        else if (status.equalsIgnoreCase("inactive")) customerReferenceList= customerReferenceRepository.findAllByStatus_Id(false);
-        if(customerReferenceList.isEmpty()) throw new RequestException("La lista de referencia de clientes está vacía","buscar cod");
+        if(status.replaceAll(" ","").equalsIgnoreCase("active")) customerReferenceList= customerReferenceRepository.findAllByStatus_Id(true);
+        else if (status.replaceAll(" ","").equalsIgnoreCase("inactive")) customerReferenceList= customerReferenceRepository.findAllByStatus_Id(false);
+        if(customerReferenceList.isEmpty()) throw new RequestException("La lista de referencia de clientes en estado '"+status+"' está vacía","100-Continue");
         return customerReferenceList;
     }
 

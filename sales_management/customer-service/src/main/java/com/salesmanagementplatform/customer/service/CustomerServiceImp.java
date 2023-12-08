@@ -30,9 +30,9 @@ public class CustomerServiceImp implements CustomerService{
     public List<CustomerModel> listOfAllCustomers(String status) {
         logger.info("Start search for all customers");
         List<CustomerModel> customerList= new ArrayList<CustomerModel>();
-        if(status.equalsIgnoreCase("active")) customerList= customerRepository.findAllByStatus_Id(true);
-        else if (status.equalsIgnoreCase("inactive")) customerList= customerRepository.findAllByStatus_Id(false);
-        if(customerList.isEmpty()) throw new RequestException("La lista de clientes está vacía","buscar cod");
+        if(status.replaceAll(" ","").equalsIgnoreCase("active")) customerList= customerRepository.findAllByStatus_Id(true);
+        else if (status.replaceAll(" ","").equalsIgnoreCase("inactive")) customerList= customerRepository.findAllByStatus_Id(false);
+        if(customerList.isEmpty()) throw new RequestException("La lista de clientes en estado '"+status+"' está vacía","100-Continue");
         return customerList;
     }
 

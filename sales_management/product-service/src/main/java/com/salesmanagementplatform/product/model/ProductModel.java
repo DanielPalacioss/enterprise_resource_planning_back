@@ -59,4 +59,16 @@ public class ProductModel {
     @ManyToOne
     @JoinColumn(name = "productStatus", nullable = false)
     private ProductStatusModel productStatus;
+
+    public void earnings()
+    {
+        if(getDiscount() > 0)
+        {
+            float earnings = ((getSalePrice()*getDiscount())/100)-getCostPrice();
+            setEarnings(earnings);
+        }
+        else {
+            setEarnings(getSalePrice()-getCostPrice());
+        }
+    }
 }

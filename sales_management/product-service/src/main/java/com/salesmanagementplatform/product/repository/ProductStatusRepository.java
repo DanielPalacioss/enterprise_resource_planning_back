@@ -4,5 +4,5 @@ import com.salesmanagementplatform.product.model.ProductStatusModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductStatusRepository extends JpaRepository<ProductStatusModel, Long> {
-    ProductStatusModel finByStatus(String status);
+    ProductStatusModel findByStatus(String status);
 }

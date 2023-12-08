@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,10 +26,12 @@ public class ProductCategoryServiceImp implements ProductCategoryService{
     }
 
     @Override
-    public List<ProductCategoryModel> listOfAllProductCategory() {
+    public List<ProductCategoryModel> listOfAllProductCategory(String status) {
         logger.info("Start search for all product categories");
-        List<ProductCategoryModel> productCategoryList = productCategoryRepository.findAll();
-        if (productCategoryList.isEmpty()) throw new RequestException("La lista de categorias está vacía","buscar cod");
+        List<ProductCategoryModel> productCategoryList = new ArrayList<ProductCategoryModel>();
+        if(status.replaceAll(" ","").equalsIgnoreCase("active")) productCategoryList= productCategoryRepository.findAllByStatus_Id(true);
+        else if (status.replaceAll(" ","").equalsIgnoreCase("inactive")) productCategoryList= productCategoryRepository.findAllByStatus_Id(false);
+        if (productCategoryList.isEmpty()) throw new RequestException("La lista de categorias de producto en estado '"+status+"' está vacía","100-Continue");
         return productCategoryList;
     }
 
@@ -59,18 +62,18 @@ public class ProductCategoryServiceImp implements ProductCategoryService{
     }
 
     @Override
-    public void saveProductCategory(ProductCategoryModel productCategoryModel) {
-        if(productCategoryRepository.findById(productCategoryModel.getId()).isEmpty())
+    public void saveProductCategory(ProductCategoryModel productCategory) {
+        if(productCategoryRepository.findById(productCategory.getId()).isEmpty())
         {
             Status status = statusRepository.findById(true).orElseThrow(() -> new RequestException("Status not found with id true", "404-Not Found"));
-            productCategoryModel.setStatus(status);
-            productCategoryModel.setCreationDate(LocalDateTime.now());
-            productCategoryModel.setUpdateDate(null);
+            productCategory.setStatus(status);
+            productCategory.setCreationDate(LocalDateTime.now());
+            productCategory.setUpdateDate(null);
             logger.info("Start the creation of product category");
-            productCategoryRepository.save(productCategoryModel);
+            productCategoryRepository.save(productCategory);
         }
         else {
-            throw new RequestException("The product category with id '" + productCategoryModel.getId() +"' is already in the database", "400-Bad Request");
+            throw new RequestException("The product category with id '" + productCategory.getId() +"' is already in the database", "400-Bad Request");
         }
     }
 }

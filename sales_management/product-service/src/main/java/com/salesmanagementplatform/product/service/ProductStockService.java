@@ -2,15 +2,14 @@ package com.salesmanagementplatform.product.service;
 
 import com.salesmanagementplatform.product.model.ProductStockModel;
 
-import java.util.List;
 
 public interface ProductStockService {
 
-    List<ProductStockModel> listOfAllProductStock();
+    ProductStockModel listProductStockByProductId(int productNumber);
 
     void updateProductStock(ProductStockModel productStock);
 
-    void deleteProductStock(Long productStockId);
+    void reduceStock(int productStockId);
 
     void saveProductStock(ProductStockModel productStock);
 }

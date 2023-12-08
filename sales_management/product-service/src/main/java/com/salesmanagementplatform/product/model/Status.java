@@ -12,6 +12,6 @@ import lombok.Data;
 public class Status {
     @Id
     private Boolean id;
-    @Column(name = "name")
+    @Column(name = "name",unique = true)
     private String name;
 }

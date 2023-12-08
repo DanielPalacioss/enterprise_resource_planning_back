@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Table(name = "productCategory")
 public class ProductCategoryModel {
 
-    @Null(message = "The id field must be null")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

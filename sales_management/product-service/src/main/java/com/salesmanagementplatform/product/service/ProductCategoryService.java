@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ProductCategoryService {
 
-    List<ProductCategoryModel> listOfAllProductCategory();
+    List<ProductCategoryModel> listOfAllProductCategory(String status);
 
     ProductCategoryModel listProductCategoryById(Long productCategoryId);
 

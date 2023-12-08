@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    List<ProductModel> listOfAllProduct();
+    List<ProductModel> listOfAllProduct(String status);
 
     ProductModel listProductById(int productId);
 

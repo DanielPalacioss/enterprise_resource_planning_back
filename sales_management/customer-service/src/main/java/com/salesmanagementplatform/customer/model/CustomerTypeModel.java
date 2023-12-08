@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Table(name = "customerType")
 public class CustomerTypeModel {
 
-    @Null(message = "The id field must be null")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
