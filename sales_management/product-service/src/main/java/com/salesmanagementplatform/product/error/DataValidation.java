@@ -10,7 +10,7 @@ public class DataValidation {
     public void handleValidationError(BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String errorMessage = Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage();
-            throw new RequestException(errorMessage, "400");
+            throw new RequestException(errorMessage, "400-bad request");
         }
     }
 }

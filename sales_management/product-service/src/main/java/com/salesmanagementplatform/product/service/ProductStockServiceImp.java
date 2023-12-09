@@ -1,6 +1,7 @@
 package com.salesmanagementplatform.product.service;
 
 import com.salesmanagementplatform.product.error.exceptions.RequestException;
+import com.salesmanagementplatform.product.model.ProductModel;
 import com.salesmanagementplatform.product.model.ProductStockModel;
 import com.salesmanagementplatform.product.repository.ProductStockRepository;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ProductStockServiceImp implements ProductStockService{
@@ -35,7 +37,14 @@ public class ProductStockServiceImp implements ProductStockService{
     }
 
     @Override
-    public void reduceStock(int productStockId) {
+    public void reduceStock(List<ProductModel> productList) {
+        productList.forEach(product -> {
+            ProductStockModel productStock= productStockRepository.findByProduct_productNumber(product.getProductNumber());
+            if (productStock == null) throw new RequestException("ProductStock not found with product number " + product.getProductNumber(),"404-Not Found");
+            else if(productStock.getQuantity() < product.getQuantity()) throw new RequestException("The product with product number " +product.getProductNumber()+ " only has " +productStock.getQuantity()+" units, the purchase must be equal to or less than said quantity.","400-Bad Request");
+            productStock.setQuantity(productStock.getQuantity()-product.getQuantity());
+            productStockRepository.save(productStock);
+        });
     }
 
     @Override

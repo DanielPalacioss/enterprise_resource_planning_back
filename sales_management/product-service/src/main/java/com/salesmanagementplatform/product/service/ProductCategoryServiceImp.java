@@ -27,7 +27,7 @@ public class ProductCategoryServiceImp implements ProductCategoryService{
 
     @Override
     public List<ProductCategoryModel> listOfAllProductCategory(String status) {
-        logger.info("Start search for all product categories");
+        logger.info("Start search for all product category categories");
         List<ProductCategoryModel> productCategoryList = new ArrayList<ProductCategoryModel>();
         if(status.replaceAll(" ","").equalsIgnoreCase("active")) productCategoryList= productCategoryRepository.findAllByStatus_Id(true);
         else if (status.replaceAll(" ","").equalsIgnoreCase("inactive")) productCategoryList= productCategoryRepository.findAllByStatus_Id(false);

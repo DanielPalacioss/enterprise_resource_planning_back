@@ -1,6 +1,9 @@
 package com.salesmanagementplatform.product.service;
 
+import com.salesmanagementplatform.product.model.ProductModel;
 import com.salesmanagementplatform.product.model.ProductStockModel;
+
+import java.util.List;
 
 
 public interface ProductStockService {
@@ -9,7 +12,7 @@ public interface ProductStockService {
 
     void updateProductStock(ProductStockModel productStock);
 
-    void reduceStock(int productStockId);
+    void reduceStock(List<ProductModel> productList);
 
     void saveProductStock(ProductStockModel productStock);
 }

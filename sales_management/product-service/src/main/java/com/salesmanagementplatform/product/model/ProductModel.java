@@ -60,6 +60,8 @@ public class ProductModel {
     @JoinColumn(name = "productStatus", nullable = false)
     private ProductStatusModel productStatus;
 
+    @Transient
+    private int quantity;
     public void earnings()
     {
         if(getDiscount() > 0)
