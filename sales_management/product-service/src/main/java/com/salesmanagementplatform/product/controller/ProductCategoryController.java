@@ -23,7 +23,7 @@ public class ProductCategoryController {
 
     @GetMapping("list/{status}")
     public ResponseEntity<List<ProductCategoryModel>> getAllProductCategories(@PathVariable String status) {
-        return ResponseEntity.ok(productCategoryService.listOfAllProductCategory(status));
+        return ResponseEntity.ok(productCategoryService.listOfAllProductCategory(status.replaceAll(" ","").toLowerCase()));
     }
 
     @GetMapping("/{productCategoryId}")

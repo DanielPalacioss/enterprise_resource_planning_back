@@ -24,7 +24,7 @@ public class CustomerController {
 
     @GetMapping("list/{status}")
     public ResponseEntity<List<CustomerModel>> getAllCustomers(@PathVariable String status) {
-        return ResponseEntity.ok(customerService.listOfAllCustomers(status));
+        return ResponseEntity.ok(customerService.listOfAllCustomers(status.replaceAll(" ","").toLowerCase()));
     }
 
     @GetMapping("/{customerId}")

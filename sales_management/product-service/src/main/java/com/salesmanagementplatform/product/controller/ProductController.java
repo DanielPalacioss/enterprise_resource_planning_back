@@ -23,7 +23,7 @@ public class ProductController {
 
     @GetMapping("list/{status}")
     public ResponseEntity<List<ProductModel>> getAllproducts(@PathVariable String status) {
-        return ResponseEntity.ok(productService.listOfAllProduct(status));
+        return ResponseEntity.ok(productService.listOfAllProduct(status.replaceAll(" ","").toLowerCase()));
     }
 
     @GetMapping("/{productNumber}")
@@ -46,7 +46,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body("The product has been successfully deleted.");
     }
 
-    @PutMapping()
+    @PutMapping
     public ResponseEntity<?> updateCustomer(@Valid @RequestBody ProductModel productModel, BindingResult bindingResult)
     {
         dataValidation.handleValidationError(bindingResult);

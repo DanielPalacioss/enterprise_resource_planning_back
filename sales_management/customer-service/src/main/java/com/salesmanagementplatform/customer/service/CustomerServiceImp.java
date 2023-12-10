@@ -30,9 +30,15 @@ public class CustomerServiceImp implements CustomerService{
     public List<CustomerModel> listOfAllCustomers(String status) {
         logger.info("Start search for all customers");
         List<CustomerModel> customerList= new ArrayList<CustomerModel>();
-        if(status.replaceAll(" ","").equalsIgnoreCase("active")) customerList= customerRepository.findAllByStatus_Id(true);
-        else if (status.replaceAll(" ","").equalsIgnoreCase("inactive")) customerList= customerRepository.findAllByStatus_Id(false);
-        if(customerList.isEmpty()) throw new RequestException("La lista de clientes en estado '"+status+"' está vacía","100-Continue");
+        if(status.replaceAll(" ","").equalsIgnoreCase("active")) {
+            customerList= customerRepository.findAllByStatus_Id(true);
+            if (customerList.isEmpty()) throw new RequestException("La lista de clientes en estado '"+status+"' está vacía","100-Continue");
+        }
+        else if (status.replaceAll(" ","").equalsIgnoreCase("inactive")) {
+            customerList= customerRepository.findAllByStatus_Id(false);
+            if (customerList.isEmpty()) throw new RequestException("La lista de clientes en estado '"+status+"' está vacía","100-Continue");
+        }
+        if (customerList.isEmpty()) throw new RequestException("No existe el estado: '"+status+"' en clientes","100-Continue");
         return customerList;
     }
 
@@ -73,8 +79,7 @@ public class CustomerServiceImp implements CustomerService{
 
     @Override
     public void saveCustomer(CustomerModel customerModel) {
-        if(customerRepository.findById(customerModel.getId()).isEmpty())
-        {
+        if(customerRepository.findById(customerModel.getId()).isEmpty()) {
             Status status = statusRepository.findById(true).orElseThrow(() -> new RequestException("Status not found with id true", "404-Not Found"));
             customerModel.setStatus(status);
             customerModel.setUpdateDate(null);
@@ -82,8 +87,6 @@ public class CustomerServiceImp implements CustomerService{
             logger.info("Start the creation of customer");
             customerRepository.save(customerModel);
         }
-        else {
-            throw new RequestException("The customer with id '" + customerModel.getId() +"' is already in the database", "400-Bad Request");
-        }
+        else throw new RequestException("The customer with id '" + customerModel.getId() +"' is already in the database", "400-Bad Request");
         }
 }

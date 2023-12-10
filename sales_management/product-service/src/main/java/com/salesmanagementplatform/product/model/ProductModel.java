@@ -1,9 +1,7 @@
 package com.salesmanagementplatform.product.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -13,6 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "product")
 public class ProductModel {
 
+    @Min(value = 1, message = "The minimum product number is 1")
     @NotNull(message = "Product Number cannot be null")
     @Id
     private int productNumber;
@@ -22,16 +21,15 @@ public class ProductModel {
     @Column(name = "productReference", nullable = false)
     private String productReference;
 
-    @Size(min = 1, message = "The minimum VAT is 1")
     @Column(name = "productVat")
     private float productVat;
 
-    @Size(min = 1, message = "The minimum cost price is 1")
+    @DecimalMin(value = "1", message = "The minimum cost price is 1")
     @NotNull(message = "Cost Price cannot be null")
     @Column(name = "costPrice", nullable = false)
     private float costPrice;
 
-    @Size(min = 1, message = "The minimum sale price is 1")
+    @DecimalMin(value = "1", message = "The minimum sale price is 1")
     @NotNull(message = "salePrice cannot be null")
     @Column(name = "salePrice", nullable = false)
     private float salePrice;
@@ -39,7 +37,8 @@ public class ProductModel {
     @Column(name = "earnings", nullable = false)
     private float earnings;
 
-    @Size(min = 0, max = 100, message = "The discount must be between 1% and 100%")
+    @DecimalMax(value = "100", message = "The discount must be between 1% and 100%")
+    @DecimalMin(value = "0", message = "The discount must be between 1% and 100%")
     @Column(name = "discount", columnDefinition = "FLOAT DEFAULT 0")
     private float discount;
 

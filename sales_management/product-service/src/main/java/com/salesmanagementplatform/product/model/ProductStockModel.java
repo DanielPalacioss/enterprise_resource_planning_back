@@ -13,7 +13,7 @@ public class ProductStockModel {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @NotNull(message = "quantity cannot be null")
     @Column(name = "quantity", nullable = false)
@@ -28,4 +28,11 @@ public class ProductStockModel {
     @OneToOne
     @JoinColumn(name = "product", nullable = false, updatable = false)
     private ProductModel product;
+
+    public String updateStatusProduct()
+    {
+        if(getQuantity()==0) return "outofstock";
+        else if (getQuantity() >0) return "available";
+        else return "";
+    }
 }

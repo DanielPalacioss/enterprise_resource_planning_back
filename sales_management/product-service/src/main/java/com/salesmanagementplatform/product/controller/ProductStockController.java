@@ -34,7 +34,7 @@ public class ProductStockController {
         return ResponseEntity.status(HttpStatus.CREATED).body("The product stock has been created successfully.");
     }
 
-    @DeleteMapping("/{productList}")
+    @DeleteMapping
     public ResponseEntity<?> reduceProductStock(@Valid @RequestBody List<ProductModel> productList, BindingResult bindingResult)
     {
         dataValidation.handleValidationError(bindingResult);

@@ -23,7 +23,7 @@ public class CustomerCategoryController {
     DataValidation dataValidation = new DataValidation();
     @GetMapping("/{status}")
     public ResponseEntity<List<CustomerCategoryModel>> getAllCustomersCategory(@PathVariable String status) {
-        return ResponseEntity.ok(customerCategoryService.listOfAllCustomersCategory(status));
+        return ResponseEntity.ok(customerCategoryService.listOfAllCustomersCategory(status.replaceAll(" ","").toLowerCase()));
     }
 
     @PostMapping

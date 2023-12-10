@@ -30,9 +30,15 @@ public class CustomerCategoryServiceImp implements CustomerCategoryService {
     public List<CustomerCategoryModel> listOfAllCustomersCategory(String status) {
         logger.info("Start search for all customer category");
         List<CustomerCategoryModel> customerCategoryList= new ArrayList<CustomerCategoryModel>();
-        if(status.replaceAll(" ","").equalsIgnoreCase("active")) customerCategoryList= customerCategoryRepository.findAllByStatus_Id(true);
-        else if (status.replaceAll(" ","").equalsIgnoreCase("inactive")) customerCategoryList= customerCategoryRepository.findAllByStatus_Id(false);
-        if(customerCategoryList.isEmpty()) throw new RequestException("La lista de categoria de clientes en estado '"+status+"' está vacía","100-Continue");
+        if(status.replaceAll(" ","").equalsIgnoreCase("active")) {
+            customerCategoryList= customerCategoryRepository.findAllByStatus_Id(true);
+            if (customerCategoryList.isEmpty()) throw new RequestException("La lista de categoria de clientes en estado '"+status+"' está vacía","100-Continue");
+        }
+        else if (status.replaceAll(" ","").equalsIgnoreCase("inactive")) {
+            customerCategoryList= customerCategoryRepository.findAllByStatus_Id(false);
+            if (customerCategoryList.isEmpty()) throw new RequestException("La lista de categoria de clientes en estado '"+status+"' está vacía","100-Continue");
+        }
+        if (customerCategoryList.isEmpty()) throw new RequestException("No existe el estado: '"+status+"' en la categoria de clientes","100-Continue");
         return customerCategoryList;
     }
 
@@ -58,12 +64,15 @@ public class CustomerCategoryServiceImp implements CustomerCategoryService {
 
     @Override
     public void saveCustomerCategory(CustomerCategoryModel customerCategoryModel) {
-        Status status = statusRepository.findById(true).orElseThrow(() -> new RequestException("Status not found with id true", "404-Not Found"));
-        customerCategoryModel.setStatus(status);
-        customerCategoryModel.setCreationDate(LocalDateTime.now());
-        customerCategoryModel.setUpdateDate(null);
-        logger.info("Start the creation of customer category");
-        customerCategoryRepository.save(customerCategoryModel);
+        if(customerCategoryModel.getId()==null) {
+            Status status = statusRepository.findById(true).orElseThrow(() -> new RequestException("Status not found with id true", "404-Not Found"));
+            customerCategoryModel.setStatus(status);
+            customerCategoryModel.setCreationDate(LocalDateTime.now());
+            customerCategoryModel.setUpdateDate(null);
+            logger.info("Start the creation of customer category");
+            customerCategoryRepository.save(customerCategoryModel);
+        }
+        else throw new RequestException("The customer category id must be null", "400-Bad Request");
     }
 
 }
