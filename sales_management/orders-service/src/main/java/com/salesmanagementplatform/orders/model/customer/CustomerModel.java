@@ -1,7 +1,6 @@
-package com.salesmanagementplatform.customer.model;
+package com.salesmanagementplatform.orders.model.customer;
 
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
