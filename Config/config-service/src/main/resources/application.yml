@@ -6,7 +6,7 @@ spring:
       server:
         git:
           uri: https://github.com/DanielPalacioss/business_management_platform_back.git
-          searchPaths: config-data
+          searchPaths: Config/config-data
           username : ${GIT_USER}
           password : ${GIT_PASSWORD}
   security:
