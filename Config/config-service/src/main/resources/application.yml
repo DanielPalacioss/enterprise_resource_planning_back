@@ -13,3 +13,6 @@ spring:
     user:
       name : root
       password : s3cr3t
+logging:
+  level:
+    org.eclipse.jgit: DEBUG
