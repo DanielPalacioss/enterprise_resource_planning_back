@@ -42,12 +42,19 @@ public class ProductStockController {
         return ResponseEntity.status(HttpStatus.CREATED).body("The stock of the products or the product sold was satisfactorily reduced.");
     }
 
-    @PutMapping()
+    @PutMapping("/cancellationOfStockReduction")
+    public ResponseEntity<?> cancellationOfStockReduction(@Valid @RequestBody List<ProductModel> productList, BindingResult bindingResult)
+    {
+        dataValidation.handleValidationError(bindingResult);
+        productStockService.cancellationOfStockReduction(productList);
+        return ResponseEntity.status(HttpStatus.CREATED).body("The stock of the products or the product sold was satisfactorily cancellation of stock reduction.");
+    }
+
+    @PutMapping
     public ResponseEntity<?> updateProductStock(@Valid @RequestBody ProductStockModel productStockModel, BindingResult bindingResult)
     {
         dataValidation.handleValidationError(bindingResult);
         productStockService.updateProductStock(productStockModel);
         return ResponseEntity.status(HttpStatus.CREATED).body("The product stock has been successfully modified.");
     }
-
 }

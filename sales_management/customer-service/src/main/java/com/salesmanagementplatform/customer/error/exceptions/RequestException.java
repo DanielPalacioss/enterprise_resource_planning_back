@@ -1,7 +1,6 @@
 package com.salesmanagementplatform.customer.error.exceptions;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
 public class RequestException extends RuntimeException{

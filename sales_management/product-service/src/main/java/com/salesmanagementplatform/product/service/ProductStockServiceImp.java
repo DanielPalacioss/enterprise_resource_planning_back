@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -53,7 +54,10 @@ public class ProductStockServiceImp implements ProductStockService{
 
     @Override
     public void reduceStock(List<ProductModel> productList) {
+        List<ProductModel> products = new ArrayList<ProductModel>();
+        List<ProductStockModel> productsStock = new ArrayList<ProductStockModel>();
         productList.forEach(product -> {
+            if(product.getQuantity()<1) throw new RequestException("The minimum product quantity is 1","400-Bad Request");
             ProductStockModel productStock= productStockRepository.findByProduct_productNumber(product.getProductNumber());
             if (productStock == null) throw new RequestException("ProductStock not found with product number " + product.getProductNumber(),"404-Not Found");
             else if(productStock.getQuantity() < product.getQuantity()) throw new RequestException("The product with product number " +product.getProductNumber()+ " only has " +productStock.getQuantity()+" units, the purchase must be equal to or less than said quantity.","400-Bad Request");
@@ -61,8 +65,25 @@ public class ProductStockServiceImp implements ProductStockService{
             ProductStatusModel productStatusModel = productStatusRepository.findByStatus(productStock.updateStatusProduct());
             if(productStatusModel == null) throw new RequestException("Status not found with status: "+ productStock.updateStatusProduct(), "404-Not Found");
             product.setProductStatus(productStatusModel);
+            products.add(product);
+            productsStock.add(productStock);
+        });
+        logger.info("Start reduced product");
+        productRepository.saveAll(products);
+        productStockRepository.saveAll(productsStock);
+    }
+
+    @Override
+    public void cancellationOfStockReduction(List<ProductModel> productList) {
+        productList.forEach(product -> {
+            ProductStockModel productStock= productStockRepository.findByProduct_productNumber(product.getProductNumber());
+            if (productStock == null) throw new RequestException("ProductStock not found with product number " + product.getProductNumber(),"404-Not Found");
+            productStock.setQuantity(productStock.getQuantity()+product.getQuantity());
+            ProductStatusModel productStatusModel = productStatusRepository.findByStatus(productStock.updateStatusProduct());
+            if(productStatusModel == null) throw new RequestException("Status not found with status: "+ productStock.updateStatusProduct(), "404-Not Found");
+            product.setProductStatus(productStatusModel);
             productRepository.save(product);
-            logger.info("Start reduced product");
+            logger.info("Start cancellation of stock reduction");
             productStockRepository.save(productStock);
         });
     }
@@ -81,8 +102,6 @@ public class ProductStockServiceImp implements ProductStockService{
             logger.info("Start the creation of stock");
             productStockRepository.save(productStock);
         }
-        else {
-            throw new RequestException("The product stock id must be null and the product must not already have a stock created.", "400-Bad Request");
-        }
+        else throw new RequestException("The product stock id must be null and the product must not already have a stock created.", "400-Bad Request");
     }
 }

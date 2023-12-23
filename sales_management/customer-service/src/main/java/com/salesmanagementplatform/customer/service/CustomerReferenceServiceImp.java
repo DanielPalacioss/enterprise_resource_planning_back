@@ -37,7 +37,7 @@ public class CustomerReferenceServiceImp implements CustomerReferenceService {
             customerReferenceList= customerReferenceRepository.findAllByStatus_Id(false);
             if (customerReferenceList.isEmpty()) throw new RequestException("La lista de referencia de clientes en estado '"+status+"' está vacía","100-Continue");
         }
-        if (customerReferenceList.isEmpty()) throw new RequestException("No existe el estado: '"+status+"' en la referencia de clientes","100-Continue");
+        else throw new RequestException("No existe el estado: '"+status+"' en la referencia de clientes","100-Continue");
         return customerReferenceList;
     }
 

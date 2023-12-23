@@ -37,7 +37,7 @@ public class CustomerTypeServiceImp implements CustomerTypeService{
             customerTypeList= customerTypeRepository.findAllByStatus_Id(false);
             if (customerTypeList.isEmpty()) throw new RequestException("La lista de type de clientes en estado '"+status+"' está vacía","100-Continue");
         }
-        if (customerTypeList.isEmpty()) throw new RequestException("No existe el estado: '"+status+"' en la type de clientes","100-Continue");
+        else throw new RequestException("No existe el estado: '"+status+"' en la type de clientes","100-Continue");
         return customerTypeList;
     }
 

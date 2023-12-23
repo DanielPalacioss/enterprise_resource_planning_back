@@ -2,7 +2,6 @@ package com.salesmanagementplatform.product.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Null;
 import lombok.Data;
 
 @Data

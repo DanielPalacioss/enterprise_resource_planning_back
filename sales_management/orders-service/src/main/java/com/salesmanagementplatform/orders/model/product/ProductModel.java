@@ -1,5 +1,6 @@
 package com.salesmanagementplatform.orders.model.product;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
@@ -16,6 +17,8 @@ public class ProductModel {
     @NotBlank(message = "Product Reference cannot be blank or null")
     private String productReference;
 
+    @NotNull
+    @DecimalMin(value = "0", message = "The minimum product vat is 0")
     private float productVat;
 
     @DecimalMin(value = "1", message = "The minimum cost price is 1")
@@ -28,6 +31,7 @@ public class ProductModel {
 
     private float earnings;
 
+    @NotNull
     @DecimalMax(value = "100", message = "The discount must be between 1% and 100%")
     @DecimalMin(value = "0", message = "The discount must be between 1% and 100%")
     private float discount;
@@ -43,15 +47,4 @@ public class ProductModel {
     private ProductStatusModel productStatus;
 
     private int quantity;
-    public void earnings()
-    {
-        if(getDiscount() > 0)
-        {
-            float earnings = ((getSalePrice()*getDiscount())/100)-getCostPrice();
-            setEarnings(earnings);
-        }
-        else {
-            setEarnings(getSalePrice()-getCostPrice());
-        }
-    }
 }

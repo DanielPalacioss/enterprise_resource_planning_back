@@ -53,7 +53,7 @@ public class ProductServiceImp implements ProductService{
             productList = productRepository.findAll();
             if(productList.isEmpty()) throw new RequestException("La lista de productos en estado '"+status+"' está vacía","100-Continue");
         }
-        if(productList.isEmpty()) throw new RequestException("No existe el estado: '"+status+"' en la categoria de producto","100-Continue");
+        else throw new RequestException("No existe el estado: '"+status+"' en la categoria de producto","100-Continue");
         return productList;
     }
 
@@ -76,7 +76,7 @@ public class ProductServiceImp implements ProductService{
         product.setUpdateDate(LocalDateTime.now());
         product.earnings();
         logger.info("Start the modification of product");
-        productRepository.save(product);
+        productRepository.save(product);logger.info("Start the modification of product");
     }
 
     @Override
