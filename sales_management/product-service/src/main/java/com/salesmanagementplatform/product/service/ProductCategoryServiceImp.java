@@ -37,7 +37,7 @@ public class ProductCategoryServiceImp implements ProductCategoryService{
             productCategoryList= productCategoryRepository.findAllByStatus_Id(false);
             if (productCategoryList.isEmpty()) throw new RequestException("La lista de categorias de producto en estado '"+status+"' está vacía","100-Continue");
         }
-        if (productCategoryList.isEmpty()) throw new RequestException("No existe el estado: '"+status+"' en la categoria de producto","100-Continue");
+        else throw new RequestException("No existe el estado: '"+status+"' en la categoria de producto","100-Continue");
         return productCategoryList;
     }
 

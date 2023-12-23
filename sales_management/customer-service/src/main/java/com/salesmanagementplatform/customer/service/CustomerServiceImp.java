@@ -38,7 +38,7 @@ public class CustomerServiceImp implements CustomerService{
             customerList= customerRepository.findAllByStatus_Id(false);
             if (customerList.isEmpty()) throw new RequestException("La lista de clientes en estado '"+status+"' está vacía","100-Continue");
         }
-        if (customerList.isEmpty()) throw new RequestException("No existe el estado: '"+status+"' en clientes","100-Continue");
+        else throw new RequestException("No existe el estado: '"+status+"' en clientes","100-Continue");
         return customerList;
     }
 

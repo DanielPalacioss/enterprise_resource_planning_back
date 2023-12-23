@@ -21,7 +21,9 @@ public class ProductModel {
     @Column(name = "productReference", nullable = false)
     private String productReference;
 
-    @Column(name = "productVat")
+    @NotNull
+    @DecimalMin(value = "0", message = "The minimum product vat is 0")
+    @Column(name = "productVat", columnDefinition = "FLOAT DEFAULT 0")
     private float productVat;
 
     @DecimalMin(value = "1", message = "The minimum cost price is 1")
@@ -37,6 +39,7 @@ public class ProductModel {
     @Column(name = "earnings", nullable = false)
     private float earnings;
 
+    @NotNull
     @DecimalMax(value = "100", message = "The discount must be between 1% and 100%")
     @DecimalMin(value = "0", message = "The discount must be between 1% and 100%")
     @Column(name = "discount", columnDefinition = "FLOAT DEFAULT 0")

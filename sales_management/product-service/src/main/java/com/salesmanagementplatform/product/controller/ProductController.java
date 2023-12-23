@@ -17,12 +17,12 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:8083")
 public class ProductController {
     @Autowired
-    ProductService productService;
+    private ProductService productService;
 
-    DataValidation dataValidation = new DataValidation();
+    private static final DataValidation dataValidation = new DataValidation();
 
     @GetMapping("list/{status}")
-    public ResponseEntity<List<ProductModel>> getAllproducts(@PathVariable String status) {
+    public ResponseEntity<List<ProductModel>> getAllProducts(@PathVariable String status) {
         return ResponseEntity.ok(productService.listOfAllProduct(status.replaceAll(" ","").toLowerCase()));
     }
 

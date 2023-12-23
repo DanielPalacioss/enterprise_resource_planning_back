@@ -14,5 +14,7 @@ public interface ProductStockService {
 
     void reduceStock(List<ProductModel> productList);
 
+    void cancellationOfStockReduction(List<ProductModel> productList);
+
     void saveProductStock(ProductStockModel productStock);
 }

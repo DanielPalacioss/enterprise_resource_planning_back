@@ -38,7 +38,7 @@ public class CustomerCategoryServiceImp implements CustomerCategoryService {
             customerCategoryList= customerCategoryRepository.findAllByStatus_Id(false);
             if (customerCategoryList.isEmpty()) throw new RequestException("La lista de categoria de clientes en estado '"+status+"' está vacía","100-Continue");
         }
-        if (customerCategoryList.isEmpty()) throw new RequestException("No existe el estado: '"+status+"' en la categoria de clientes","100-Continue");
+        else throw new RequestException("No existe el estado: '"+status+"' en la categoria de clientes","100-Continue");
         return customerCategoryList;
     }
 
