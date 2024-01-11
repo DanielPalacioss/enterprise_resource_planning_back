@@ -22,19 +22,19 @@ public class InvoiceController {
 
     DataValidation dataValidation = new DataValidation();
 
-    @GetMapping("listByCustomerAndDate/")
-    public ResponseEntity<List<InvoiceModel>> getAllByCustomerAndDate(@PathVariable Long customer, @PathVariable LocalDate startDate, @PathVariable LocalDate finalDate) {
+    @GetMapping("/listByCustomerAndDate")
+    public ResponseEntity<List<InvoiceModel>> getAllByCustomerAndDate(@RequestParam(value = "customer", required = false) Long customer, @RequestParam(value = "startDate", required = false) LocalDate startDate, @RequestParam(value = "finalDate", required = false) LocalDate finalDate) {
         return ResponseEntity.ok(invoiceService.listAllByCustomerAndDate(customer, startDate, finalDate));
     }
 
-    @GetMapping("listByStatus/")
-    public ResponseEntity<List<InvoiceModel>> listAllInvoices(@PathVariable String status) {
+    @GetMapping("/listByStatus")
+    public ResponseEntity<List<InvoiceModel>> listAllInvoices(@RequestParam String status) {
         return ResponseEntity.ok(invoiceService.listAllInvoices(status.replaceAll(" ","").toLowerCase()));
     }
 
-    @GetMapping("listById/")
-    public ResponseEntity<InvoiceModel> listByInvoiceId(@PathVariable Long customer) {
-        return ResponseEntity.ok(invoiceService.listByInvoiceId(customer));
+    @GetMapping("/listById")
+    public ResponseEntity<InvoiceModel> listByInvoiceId(@RequestParam Long invoiceId) {
+        return ResponseEntity.ok(invoiceService.listByInvoiceId(invoiceId));
     }
 
     @PostMapping

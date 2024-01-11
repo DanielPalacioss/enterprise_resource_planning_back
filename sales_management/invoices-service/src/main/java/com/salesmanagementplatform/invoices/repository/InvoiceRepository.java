@@ -11,19 +11,19 @@ import java.util.List;
 public interface InvoiceRepository extends JpaRepository<InvoiceModel, Long> {
 
     @Query(value = "SELECT i.* FROM sc_business_management_platform.orders AS o, sc_business_management_platform.invoice AS i " +
-            "WHERE i.order_id = o.id AND o.customer_id= :customerId AND i.invoice_date BETWEEN :Edate AND :Fdate;", nativeQuery = true)
+            "WHERE i.order_id = o.id AND o.customer_id= :customerId AND i.creation_date BETWEEN :Edate AND :Fdate", nativeQuery = true)
     List<InvoiceModel> findAllByCustomerAndEdateAndFdate(@Param("customerId") Long customerId, @Param("Edate") LocalDate Edate, @Param("Fdate") LocalDate Fdate);
 
     @Query(value = "SELECT i.* FROM sc_business_management_platform.orders AS o, sc_business_management_platform.invoice AS i " +
-            "WHERE i.order_id = o.id AND o.customer_id= :customerId AND i.invoice_date >= :Edate;", nativeQuery = true)
+            "WHERE i.order_id = o.id AND o.customer_id= :customerId AND i.creation_date >= :Edate", nativeQuery = true)
     List<InvoiceModel> findAllByCustomerAndEdate(@Param("customerId") Long customerId, @Param("Edate") LocalDate Edate);
 
     @Query(value = "SELECT i.* FROM sc_business_management_platform.invoice AS i " +
-            "WHERE i.invoice_date >= :Edate;", nativeQuery = true)
+            "WHERE i.creation_date >= :Edate", nativeQuery = true)
     List<InvoiceModel> findAllByEdate(@Param("Edate") LocalDate Edate);
 
     @Query(value = "SELECT i.* FROM sc_business_management_platform.invoice AS i " +
-            "WHERE i.invoice_date BETWEEN :Edate AND :Fdate;", nativeQuery = true)
+            "WHERE i.creation_date BETWEEN :Edate AND :Fdate", nativeQuery = true)
     List<InvoiceModel> findAllByEdateAndFdate(@Param("Edate") LocalDate Edate, @Param("Fdate") LocalDate Fdate);
 
     List<InvoiceModel> findAllByOrder_Customer_id(Long customerId);

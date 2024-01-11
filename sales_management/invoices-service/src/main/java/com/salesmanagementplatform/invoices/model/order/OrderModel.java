@@ -1,6 +1,5 @@
 package com.salesmanagementplatform.invoices.model.order;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -34,15 +33,15 @@ public class OrderModel {
     @Column(name = "shippingAddress", length = 200, nullable = false)
     private String shippingAddress;
 
-    @Column(name="orderDate", nullable = false, updatable = false)
-    private LocalDateTime orderDate;
+    @Column(name="creationDate", nullable = false, updatable = false)
+    private LocalDateTime creationDate;
 
     @Future(message = "The date must be in the future.")
     @Column(name="expirationDate")
     private LocalDateTime expirationDate;
 
-    @Column(name="orderUpdateDate")
-    private LocalDateTime orderUpdateDate;
+    @Column(name="updateDate")
+    private LocalDateTime updateDate;
 
     @Column(name = "orderDetails",columnDefinition = "TEXT", nullable = false)
     private String orderDetails;
@@ -155,7 +154,7 @@ public class OrderModel {
         }
         productDetailsList.add(productDetails);
     }
-    private static <T> List<T> jsonNodeToList(JsonNode jsonNode, Class<T> valueType, ObjectMapper objectMapper) throws IOException, JsonProcessingException {
+    private static <T> List<T> jsonNodeToList(JsonNode jsonNode, Class<T> valueType, ObjectMapper objectMapper) throws IOException{
         if (jsonNode.isArray()) {
             ArrayNode arrayNode = (ArrayNode) jsonNode;
             Iterator<JsonNode> elements = arrayNode.elements();

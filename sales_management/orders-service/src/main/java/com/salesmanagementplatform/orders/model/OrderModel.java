@@ -34,15 +34,15 @@ public class OrderModel {
     @Column(name = "shippingAddress", length = 200, nullable = false)
     private String shippingAddress;
 
-    @Column(name="orderDate", nullable = false, updatable = false)
-    private LocalDateTime orderDate;
+    @Column(name="creationDate", nullable = false, updatable = false)
+    private LocalDateTime creationDate;
 
     @Future(message = "The date must be in the future.")
     @Column(name="expirationDate")
     private LocalDateTime expirationDate;
 
-    @Column(name="orderUpdateDate")
-    private LocalDateTime orderUpdateDate;
+    @Column(name="updateDate")
+    private LocalDateTime updateDate;
 
     @Column(name = "orderDetails",columnDefinition = "TEXT", nullable = false)
     private String orderDetails;

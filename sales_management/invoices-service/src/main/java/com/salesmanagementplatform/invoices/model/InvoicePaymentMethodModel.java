@@ -1,5 +1,6 @@
 package com.salesmanagementplatform.invoices.model;
 
+import com.salesmanagementplatform.invoices.model.customer.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -8,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "InvoicePaymentMethodModel")
+@Table(name = "InvoicePaymentMethod")
 public class InvoicePaymentMethodModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,9 +23,13 @@ public class InvoicePaymentMethodModel {
     @Column(name = "description", length = 250, nullable = false)
     private String description;
 
-    @Column(name="paymentMethodDate", nullable = false, updatable = false)
-    private LocalDateTime paymentMethodDate;
+    @Column(name="creationDate", nullable = false, updatable = false)
+    private LocalDateTime creationDate;
 
-    @Column(name="paymentMethodDate")
-    private LocalDateTime paymentMethodUpdateDate;
+    @Column(name="updateDate")
+    private LocalDateTime updateDate;
+
+    @ManyToOne
+    @JoinColumn(name = "statusId", nullable = false)
+    private Status status;
 }

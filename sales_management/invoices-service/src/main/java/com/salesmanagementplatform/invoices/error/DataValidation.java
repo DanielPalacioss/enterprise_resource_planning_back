@@ -1,6 +1,7 @@
 package com.salesmanagementplatform.invoices.error;
 
-import com.salesmanagementplatform.orders.error.exceptions.RequestException;
+
+import com.salesmanagementplatform.invoices.error.exceptions.RequestException;
 import org.springframework.validation.BindingResult;
 
 import java.util.Objects;

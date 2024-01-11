@@ -36,7 +36,7 @@ public class InvoicePaymentMethodServiceImp implements InvoicePaymentMethodServi
         InvoicePaymentMethodModel paymentMethod = paymentMethodRepository.findById(updatePaymentMethod.getId()).orElseThrow(()-> new RequestException("Payment Method not found with id " + updatePaymentMethod.getId(), "404-Not Found"));
         paymentMethod.setPaymentMethod(updatePaymentMethod.getPaymentMethod());
         paymentMethod.setDescription(updatePaymentMethod.getDescription());
-        paymentMethod.setPaymentMethodUpdateDate(LocalDateTime.now());
+        paymentMethod.setUpdateDate(LocalDateTime.now());
         logger.info("Start the update of payment method");
         paymentMethodRepository.save(paymentMethod);
     }
@@ -45,8 +45,8 @@ public class InvoicePaymentMethodServiceImp implements InvoicePaymentMethodServi
     public void saveInvoicePaymentMethod(InvoicePaymentMethodModel paymentMethod) {
         if (paymentMethod.getId() == null)
         {
-            paymentMethod.setPaymentMethodDate(LocalDateTime.now());
-            paymentMethod.setPaymentMethodUpdateDate(null);
+            paymentMethod.setCreationDate(LocalDateTime.now());
+            paymentMethod.setUpdateDate(null);
             logger.info("Start the creation of payment method");
             paymentMethodRepository.save(paymentMethod);
         }
