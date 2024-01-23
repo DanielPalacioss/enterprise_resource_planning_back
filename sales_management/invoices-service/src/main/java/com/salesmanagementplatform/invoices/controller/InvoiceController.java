@@ -2,6 +2,7 @@ package com.salesmanagementplatform.invoices.controller;
 
 import com.salesmanagementplatform.invoices.error.DataValidation;
 import com.salesmanagementplatform.invoices.model.InvoiceModel;
+import com.salesmanagementplatform.invoices.service.FilterFields;
 import com.salesmanagementplatform.invoices.service.InvoiceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,8 @@ public class InvoiceController {
     DataValidation dataValidation = new DataValidation();
 
     @GetMapping("/listByCustomerAndDate")
-    public ResponseEntity<List<InvoiceModel>> getAllByCustomerAndDate(@RequestParam(value = "customer", required = false) Long customer, @RequestParam(value = "startDate", required = false) LocalDate startDate, @RequestParam(value = "finalDate", required = false) LocalDate finalDate) {
-        return ResponseEntity.ok(invoiceService.listAllByCustomerAndDate(customer, startDate, finalDate));
+    public ResponseEntity<List<InvoiceModel>> getAllByCustomerAndDate(@RequestBody FilterFields filterFields) {
+        return ResponseEntity.ok(invoiceService.listAllByCustomerAndDate(filterFields));
     }
 
     @GetMapping("/listByStatus")

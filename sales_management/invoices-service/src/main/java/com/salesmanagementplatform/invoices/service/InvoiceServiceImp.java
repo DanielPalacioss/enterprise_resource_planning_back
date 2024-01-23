@@ -42,34 +42,34 @@ public class InvoiceServiceImp implements InvoiceService{
     }
 
     @Override
-    public List<InvoiceModel> listAllByCustomerAndDate(Long customer, LocalDate startDate, LocalDate finalDate) {
+    public List<InvoiceModel> listAllByCustomerAndDate(FilterFields filterFields) {
         List<InvoiceModel> invoiceList = new ArrayList<InvoiceModel>();
-        if(customer != null && startDate !=null && finalDate != null)
+        if(filterFields.customer() != null && filterFields.startDate() !=null && filterFields.finalDate() != null)
         {
             logger.info("Start search for all invoices");
-            finalDate= finalDate.plusDays(1);
-            invoiceList = invoiceRepository.findAllByCustomerAndEdateAndFdate(customer,startDate,finalDate);
+            invoiceList = invoiceRepository.findAllByCustomerAndEdateAndFdate(filterFields.customer(),filterFields.startDate(),filterFields.finalDate().plusDays(1));
             if(invoiceList.isEmpty()) throw new RequestException("Validate that the client and dates are correct.","404-Not Found");
         }
-        else if(customer != null && startDate !=null)
+        else if(filterFields.customer() != null && filterFields.startDate() !=null)
         {
             logger.info("Start search for all invoices");
-            invoiceList = invoiceRepository.findAllByCustomerAndEdate(customer, startDate);
+            invoiceList = invoiceRepository.findAllByCustomerAndEdate(filterFields.customer(), filterFields.startDate());
             if(invoiceList.isEmpty()) throw new RequestException("Validate that the client and date are correct.","404-Not Found");
         }
-        else if(customer != null)
+        else if(filterFields.customer() != null)
         {
             logger.info("Start search for all invoices");
-            invoiceList = invoiceRepository.findAllByOrder_Customer_id(customer);
-            if(invoiceList.isEmpty()) throw new RequestException("Customer not found with id " + customer,"404-Not Found");
+            invoiceList = invoiceRepository.findAllByOrder_Customer_id(filterFields.customer());
+            if(invoiceList.isEmpty()) throw new RequestException("Customer not found with id " + filterFields.customer(),"404-Not Found");
         }
-        else if(startDate !=null)
+        else if(filterFields.startDate() !=null)
         {
             logger.info("Start search for all invoices");
-            invoiceList = invoiceRepository.findAllByEdate(startDate);
+            invoiceList = invoiceRepository.findAllByEdate(filterFields.startDate());
             if (invoiceList.isEmpty()) throw new RequestException("Start date is incorrect.","404-Not Found");
         }
-        else if(finalDate != null) throw new RequestException("You cannot search for the invoice with only the final date.","400-Bad Request");
+        else if(filterFields.finalDate() != null) throw new RequestException("You cannot search for the invoice with only the final date.","400-Bad Request");
+        else throw new RequestException("It is not possible to do a search with the data entered.","400-Bad Request");
         invoiceList.forEach(invoice ->
         {
             invoice.getOrder().setProductsJson(invoice.getOrder().convertStringToJsonNode(invoice.getOrder().getProducts()));
@@ -161,7 +161,6 @@ public class InvoiceServiceImp implements InvoiceService{
             InvoicePaymentMethodModel invoicePaymentMethod = invoicePaymentMethodRepository.findByPaymentMethod(invoice.getPaymentMethod().getPaymentMethod());
             if(invoicePaymentMethod==null) throw new RequestException("Invoice payment method not found: " + invoice.getInvoiceStatus().getStatus(),"404-Not Found");
             invoice.setPaymentMethod(invoicePaymentMethod);
-
             InvoiceStatusModel invoiceStatus = invoiceStatusRepository.findByStatus(invoice.getInvoiceStatus().getStatus());
             if(invoiceStatus==null) throw new RequestException("Invoice status not found with status " + invoice.getInvoiceStatus().getStatus(),"404-Not Found");
             invoice.setInvoiceStatus(invoiceStatus);
@@ -176,41 +175,41 @@ public class InvoiceServiceImp implements InvoiceService{
                         throw new RuntimeException(e);
                     }
                 });
-        invoice.addExchange();
-        invoice.setCreationDate(LocalDateTime.now());
-        invoice.setUpdateDate(null);
-        if (invoice.getInvoiceStatus().getStatus().equals("pending") && !(invoice.getExpirationDate() == null)) {
-            circuitBreakerFactory.create("orderUpdateStatus").run(() ->
-                    {
-                        ordersClient.updateOrderStatus(invoice.getOrder().getId(), "delivered");
-                        return null;
-                    },
-                    throwable -> {
-                        try {
-                            throw throwable;
-                        } catch (Throwable e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-            invoiceRepository.save(invoice);
-        } else if (invoice.getInvoiceStatus().getStatus().equals("pending") && invoice.getExpirationDate() == null) {
+            invoice.addExchange();
+            invoice.setCreationDate(LocalDateTime.now());
+            invoice.setUpdateDate(null);
+            if (invoice.getInvoiceStatus().getStatus().equals("pending") && !(invoice.getExpirationDate() == null)) {
+                circuitBreakerFactory.create("orderUpdateStatus").run(() ->
+                        {
+                            ordersClient.updateOrderStatus(invoice.getOrder().getId(), "delivered");
+                            return null;
+                        },
+                        throwable -> {
+                            try {
+                                throw throwable;
+                            } catch (Throwable e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
+                invoiceRepository.save(invoice);
+            } else if (invoice.getInvoiceStatus().getStatus().equals("pending") && invoice.getExpirationDate() == null) {
             throw new RequestException("If the invoice status is pending, you cannot leave the expiration date empty.", "400-Bad Request");
-        } else if (!(invoice.getExpirationDate() == null) && !invoice.getInvoiceStatus().getStatus().equals("pending")) {
-            throw new RequestException("There cannot be an expiration date if the invoice status is other than pending.", "400-Bad Request");
-        } else {
-            circuitBreakerFactory.create("orderUpdateStatus").run(() ->
-                    {
-                        ordersClient.updateOrderStatus(invoice.getOrder().getId(), "delivered");
-                        return null;
-                    },
-                    throwable -> {
-                        try {
-                            throw throwable;
-                        } catch (Throwable e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-            invoiceRepository.save(invoice);
+            } else if (!(invoice.getExpirationDate() == null) && !invoice.getInvoiceStatus().getStatus().equals("pending")) {
+                throw new RequestException("There cannot be an expiration date if the invoice status is other than pending.", "400-Bad Request");
+            } else {
+                circuitBreakerFactory.create("orderUpdateStatus").run(() ->
+                        {
+                            ordersClient.updateOrderStatus(invoice.getOrder().getId(), "delivered");
+                            return null;
+                        },
+                        throwable -> {
+                            try {
+                                throw throwable;
+                            } catch (Throwable e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
+                invoiceRepository.save(invoice);
         }
     } else throw new RequestException("The invoice id must be null", "400-Bad Request");
     }

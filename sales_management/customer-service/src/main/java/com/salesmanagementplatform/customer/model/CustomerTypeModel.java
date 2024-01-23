@@ -18,7 +18,7 @@ public class CustomerTypeModel {
 
     @NotBlank(message = "'category' cannot be blank or null")
     @Size(max = 60, min = 1, message = "'category' must be between 1 and 60 characters")
-    @Column(name= "type", length = 60, nullable = false)
+    @Column(name= "type", length = 60, nullable = false, unique = true)
     private String type;
 
     @NotBlank(message = "'description' cannot be blank or null")

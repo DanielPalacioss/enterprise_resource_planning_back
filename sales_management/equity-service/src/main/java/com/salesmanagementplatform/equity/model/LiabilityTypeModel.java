@@ -1,28 +1,24 @@
-package com.salesmanagementplatform.customer.model;
+package com.salesmanagementplatform.equity.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "customerCategory")
-public class CustomerCategoryModel {
-
+@Table(name = "liabilityType")
+public class LiabilityTypeModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "'category' cannot be blank or null")
-    @Size(max = 60, min = 1, message = "'category' must be between 1 and 60 characters")
-    @Column(name= "category", length = 60, nullable = false, unique = true)
-    private String category;
+    @NotBlank(message = "liability type cannot be blank or null")
+    @Column(name = "liabilityType", length = 50, nullable = false, unique = true)
+    private String liabilityType;
 
-    @NotBlank(message = "'description' cannot be blank or null")
-    @Size(max = 250, min = 10, message = "'description' must be between 10 and 250 characters")
+    @NotBlank(message = "description cannot be blank or null")
     @Column(name = "description", nullable = false)
     private String description;
 

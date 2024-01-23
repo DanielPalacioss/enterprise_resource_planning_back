@@ -18,7 +18,7 @@ public class ProductModel {
 
     @Size(min = 10, max = 255, message = "Product Reference must be between 10 and 255 characters")
     @NotBlank(message = "Product Reference cannot be blank or null")
-    @Column(name = "productReference", nullable = false)
+    @Column(name = "productReference", nullable = false, unique = true)
     private String productReference;
 
     @NotNull

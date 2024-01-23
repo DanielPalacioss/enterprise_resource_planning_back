@@ -18,7 +18,7 @@ public class CustomerReferenceModel {
 
     @NotBlank(message = "'category' cannot be blank or null")
     @Size(max = 60, min = 1, message = "'category' must be between 1 and 60 characters")
-    @Column(name= "reference", length = 60, nullable = false)
+    @Column(name= "reference", length = 60, nullable = false, unique = true)
     private String reference;
 
     @NotBlank(message = "'description' cannot be blank or null")
