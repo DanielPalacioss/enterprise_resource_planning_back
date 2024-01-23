@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface InvoiceService {
 
-    List<InvoiceModel> listAllByCustomerAndDate(Long customer, LocalDate startDate, LocalDate finalDate);
+    List<InvoiceModel> listAllByCustomerAndDate(FilterFields filterFields);
 
     List<InvoiceModel> listAllInvoices(String invoiceStatus);
 

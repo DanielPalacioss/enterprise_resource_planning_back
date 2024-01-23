@@ -23,8 +23,8 @@ public class InvoicePaymentMethodController {
     DataValidation dataValidation = new DataValidation();
 
     @GetMapping()
-    public ResponseEntity<List<InvoicePaymentMethodModel>> getAllInvoicePaymentMethod() {
-        return ResponseEntity.ok(invoicePaymentMethodService.listAllInvoicePaymentMethod());
+    public ResponseEntity<List<InvoicePaymentMethodModel>> getAllInvoicePaymentMethod(@RequestParam String status) {
+        return ResponseEntity.ok(invoicePaymentMethodService.listAllInvoicePaymentMethod(status));
     }
 
     @PostMapping
@@ -39,5 +39,12 @@ public class InvoicePaymentMethodController {
         dataValidation.handleValidationError(bindingResult);
         invoicePaymentMethodService.updateInvoicePaymentMethod(paymentMethodModel);
         return ResponseEntity.status(HttpStatus.CREATED).body("The invoice payment method has been successfully modified.");
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deletePaymentMethod(@RequestParam Long invoicePaymentMethodId)
+    {
+        invoicePaymentMethodService.deleteInvoicePaymentMethod(invoicePaymentMethodId);
+        return ResponseEntity.status(HttpStatus.CREATED).body("The invoice payment method has been successfully deleted.");
     }
 }

@@ -95,7 +95,7 @@ public class OrderServiceImp implements OrderService {
             orderModel.convertDetailsListToJson(orderModel.getProductDetailsList());
             orderModel.setOrderDetails(orderModel.getOrderDetailsJson().toString());
             orderModel.convertProductsListToJson(updatedOrder.getProductList());
-            orderModel.setOrderUpdateDate(LocalDateTime.now());
+            orderModel.setUpdateDate(LocalDateTime.now());
             orderModel.setProducts(orderModel.getProductsJson().toString());
             orderModel.setCustomer(updatedOrder.getCustomer());
             orderModel.setShippingAddress(updatedOrder.getShippingAddress());
@@ -134,7 +134,7 @@ public class OrderServiceImp implements OrderService {
                 if (orderStatus == null) {
                     throw new RequestException("Order status not found with status " + status, "404-Not Found");
                 } else {
-                    orderModel.setOrderUpdateDate(LocalDateTime.now());
+                    orderModel.setUpdateDate(LocalDateTime.now());
                     orderModel.setOrderStatus(orderStatus);
                     orderModel.setProductsJson(orderModel.convertStringToJsonNode(orderModel.getProducts()));
                     orderModel.convertJsonToProductList();
@@ -172,12 +172,12 @@ public class OrderServiceImp implements OrderService {
                                 throw new RuntimeException(e);
                             }
                         });
-                orderModel.setOrderUpdateDate(LocalDateTime.now());
+                orderModel.setUpdateDate(LocalDateTime.now());
                 orderModel.setOrderStatus(orderStatus);
                 logger.info("Start the update of order status");
                 orderRepository.save(orderModel);
             } else {
-                orderModel.setOrderUpdateDate(LocalDateTime.now());
+                orderModel.setUpdateDate(LocalDateTime.now());
                 orderModel.setOrderStatus(orderStatus);
                 logger.info("Start the update of order status");
                 orderRepository.save(orderModel);
@@ -198,8 +198,8 @@ public class OrderServiceImp implements OrderService {
                             throw new RuntimeException(e);
                         }
                     });
-            orderModel.setOrderDate(LocalDateTime.now());
-            orderModel.setOrderUpdateDate(null);
+            orderModel.setCreationDate(LocalDateTime.now());
+            orderModel.setUpdateDate(null);
             OrderStatusModel orderStatus = orderStatusRepository.findByStatus("preparing");
             if (orderStatus == null) {
                 throw new RequestException("Order status not found with status preparing", "404-Not Found");

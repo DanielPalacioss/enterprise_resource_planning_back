@@ -26,7 +26,7 @@ public class ProductStockModel {
     private LocalDateTime updateDate;
 
     @OneToOne
-    @JoinColumn(name = "product", nullable = false, updatable = false)
+    @JoinColumn(name = "product", nullable = false, updatable = false, unique = true)
     private ProductModel product;
 
     public String updateStatusProduct()

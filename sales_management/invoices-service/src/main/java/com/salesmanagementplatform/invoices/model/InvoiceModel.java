@@ -26,11 +26,11 @@ public class InvoiceModel {
     @Column(name = "exchange", nullable = false)
     private double exchange;
 
-    @Column(name="invoiceDate", nullable = false, updatable = false)
-    private LocalDateTime invoiceDate;
+    @Column(name="creationDate", nullable = false, updatable = false)
+    private LocalDateTime creationDate;
 
-    @Column(name="invoiceUpdateDate")
-    private LocalDateTime invoiceUpdateDate;
+    @Column(name="updateDate")
+    private LocalDateTime updateDate;
 
     @Future(message = "The date must be in the future.")
     @Column(name="expirationDate")
