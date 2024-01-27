@@ -8,14 +8,14 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "Status")
+@Table(name = "assetStatus")
 public class AssetStatusModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "asset Status cannot be blank or null")
-    @Column(name = "Status", length = 50, nullable = false, unique = true)
+    @Column(name = "assetStatus", length = 50, nullable = false, unique = true)
     private String assetStatus;
 
     @NotBlank(message = "description cannot be blank or null")

@@ -28,7 +28,7 @@ public class LiabilityServiceImp implements LiabilityService{
 
     @Override
     public List<LiabilityModel> filterLiabilitySearch(FilterFields filterFields) {
-        logger.info("Start search for all Asset");
+        logger.info("Start search for all liability");
         List<LiabilityModel> liabilityList = new ArrayList<LiabilityModel>();
         liabilityList = filterFields.getAllLiability();
         if(liabilityList.isEmpty()) throw new RequestException("The list with the data entered is empty, however validate that the data is correct.","404-Not Found");
@@ -37,7 +37,7 @@ public class LiabilityServiceImp implements LiabilityService{
 
     @Override
     public List<LiabilityModel> listAllLiability() {
-        logger.info("Start search for all Asset");
+        logger.info("Start search for all liability");
         List<LiabilityModel> liabilityList = liabilityRepository.findAll();
         if(liabilityList.isEmpty()) throw new RequestException("The liability list is empty.","100-Continue");
         return liabilityList;

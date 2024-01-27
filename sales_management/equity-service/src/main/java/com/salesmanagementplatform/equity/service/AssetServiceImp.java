@@ -32,6 +32,7 @@ public class AssetServiceImp implements AssetService{
 
     @Override
     public List<AssetModel> filterAssetSearch(FilterFields filterFields) {
+        logger.info("Start search for all Asset");
         List<AssetModel> assetList = new ArrayList<AssetModel>();
         assetList = filterFields.getAllAsset();
         if(assetList.isEmpty()) throw new RequestException("The list with the data entered is empty, however validate that the data is correct.","404-Not Found");
