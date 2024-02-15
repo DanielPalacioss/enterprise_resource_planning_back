@@ -41,10 +41,10 @@ public class AssetModel {
     private LocalDateTime updateDate;
 
     @ManyToOne
-    @JoinColumn(name = "type")
+    @JoinColumn(name = "assetType")
     private AssetTypeModel assetType;
 
     @ManyToOne
-    @JoinColumn(name = "Status", nullable = false)
+    @JoinColumn(name = "assetStatus", nullable = false)
     private AssetStatusModel assetStatus;
 }
