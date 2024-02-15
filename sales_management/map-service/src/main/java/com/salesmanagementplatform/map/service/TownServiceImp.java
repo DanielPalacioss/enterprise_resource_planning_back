@@ -22,7 +22,7 @@ public class TownServiceImp implements TownService{
     @Override
     public List<TownModel> listAllTown(String department) {
         logger.info("Start search for all town");
-        List<TownModel> townList = townRepository.findAllByDepartmentId(department);
+        List<TownModel> townList = townRepository.findAllByDepartment_Department(department);
         if(townList.isEmpty()) throw new RequestException("The town list is empty.","100-Continue");
         return townList;
     }

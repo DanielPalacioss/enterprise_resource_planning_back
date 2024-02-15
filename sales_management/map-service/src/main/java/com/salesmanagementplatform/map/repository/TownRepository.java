@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface TownRepository extends JpaRepository<TownModel, Long> {
-    List<TownModel> findAllByDepartmentId(String department);
+    List<TownModel> findAllByDepartment_Department(String department);
 }

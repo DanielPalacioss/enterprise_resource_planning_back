@@ -11,10 +11,10 @@ public class TownModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "town", unique = true)
+    @Column(name = "town", length = 50)
     private String town;
 
-    @OneToOne
-    @JoinColumn(name = "departmentId", nullable = false)
-    private DepartmentModel departmentId;
+    @ManyToOne
+    @JoinColumn(name = "department", nullable = false)
+    private DepartmentModel department;
 }
