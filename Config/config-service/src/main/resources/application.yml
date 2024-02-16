@@ -5,7 +5,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/DanielPalacioss/business_management_platform_back.git
+          uri: https://github.com/DanielPalacioss/enterprise_resource_planning_back.git
           searchPaths: Config/config-data
           username : ${GIT_USER}
           password : ${GIT_PASSWORD}
