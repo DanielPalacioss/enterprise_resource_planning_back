@@ -14,6 +14,6 @@ spring:
           enabled: true
       routes:
         - id: salesmanagement-service
-          uri:  http://localhost:8081/
+          uri:  lb://SALESMANAGEMENT-SERVICE/
           predicates:
-            - Path=/api/**
+            - Path=/api/customer/**
