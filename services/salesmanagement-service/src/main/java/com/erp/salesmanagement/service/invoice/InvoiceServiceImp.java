@@ -7,13 +7,11 @@ import com.erp.salesmanagement.model.invoice.InvoiceStatusModel;
 import com.erp.salesmanagement.repository.invoice.InvoicePaymentMethodRepository;
 import com.erp.salesmanagement.repository.invoice.InvoiceRepository;
 import com.erp.salesmanagement.repository.invoice.InvoiceStatusRepository;
-import com.erp.salesmanagement.repository.product.ProductRepository;
 import com.erp.salesmanagement.service.order.OrderService;
 import com.erp.salesmanagement.service.product.ProductStockService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

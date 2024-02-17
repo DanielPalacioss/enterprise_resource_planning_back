@@ -24,16 +24,14 @@ public class OrderServiceImp implements OrderService {
     private static final Logger logger = LoggerFactory.getLogger(OrderServiceImp.class);
     private final OrderRepository orderRepository;
     private final OrderStatusRepository orderStatusRepository;
-    private final CircuitBreakerFactory circuitBreakerFactory;
     @Autowired
     private CustomerService customerService;
     @Autowired
     private ProductStockService productStockService;
 
-    public OrderServiceImp(OrderRepository orderRepository, OrderStatusRepository orderStatusRepository, CircuitBreakerFactory circuitBreakerFactory) {
+    public OrderServiceImp(OrderRepository orderRepository, OrderStatusRepository orderStatusRepository) {
         this.orderRepository = orderRepository;
         this.orderStatusRepository = orderStatusRepository;
-        this.circuitBreakerFactory = circuitBreakerFactory;
     }
 
     @Override
