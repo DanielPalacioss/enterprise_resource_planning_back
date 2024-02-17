@@ -16,4 +16,4 @@ spring:
         - id: salesmanagement-service
           uri:  lb://salesmanagement-service
           predicates:
-            - Path=/salesmanagement/**
+            - Path=/api/**
