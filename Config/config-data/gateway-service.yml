@@ -9,9 +9,9 @@ spring:
           enabled: true
       routes:
         - id: salesmanagement-service
-          uri:  http://localhost:8082
+          uri: lb://salesmanagement-service
           predicates:
-            - Path= /api/customer/1
+            - Path= /api/**
 
 eureka:
   client:
