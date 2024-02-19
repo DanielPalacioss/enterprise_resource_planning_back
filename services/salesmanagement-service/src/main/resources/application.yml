@@ -3,9 +3,9 @@ spring:
     name: salesmanagement-service
   config:
     import:
-      - optional:configserver:http://localhost:8080
+      - optional:configserver:http://localhost:8081
   cloud:
     config:
-      uri: http://localhost:8080
+      uri: http://localhost:8081
       username: root
       password: s3cr3t
