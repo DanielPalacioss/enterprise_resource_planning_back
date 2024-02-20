@@ -8,8 +8,8 @@ spring:
         locator:
           enabled: true
       routes:
-      - id: salesmanagemen
-        uri: lb://salesmanagement-service:8082
+      - id: salesmanagement-service
+        uri: lb://salesmanagement-service
         predicates:
         - Path=/api/**
 
