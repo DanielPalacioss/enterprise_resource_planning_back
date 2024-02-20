@@ -11,9 +11,9 @@ spring:
       - id: salesmanagement-service
         uri: lb://salesmanagement-service
         predicates:
-        - Path=/customer/**
+        - Path=/salesmanagement-service/**
         filters:
-          - PrefixPath= /api
+          - StripPrefix=1
 
 eureka:
   instance:
