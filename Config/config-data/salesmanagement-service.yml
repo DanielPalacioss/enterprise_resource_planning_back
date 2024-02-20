@@ -14,6 +14,8 @@ spring:
     show-sql: true
 
 eureka:
+  instance:
+    hostname: localhost
   client:
     serviceUrl:
       defaultZone: http://localhost:8088/eureka
