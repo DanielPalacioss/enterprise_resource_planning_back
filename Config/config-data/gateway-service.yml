@@ -8,10 +8,10 @@ spring:
         locator:
           enabled: true
       routes:
-        - id: salesmanagement
-          uri: http://localhost:8082
-          predicates:
-            - Path=/api/**
+      - id: salesmanagemen
+        uri: http://localhost:8082
+        predicates:
+        - Path=/api/**
 
 eureka:
   instance:
