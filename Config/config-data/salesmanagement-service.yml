@@ -2,6 +2,8 @@ server:
   port: 8082
 
 spring:
+  application:
+    name: salesmanagement-service
   datasource:
     url: jdbc:postgresql://localhost:5432/db_business_management_platform?currentSchema=sc_business_management_platform&ssl=false
     username: postgres
@@ -16,6 +18,7 @@ spring:
 eureka:
   instance:
     hostname: localhost
+    instance-id: ${spring.application.name}:${instanceId:${random.value}}
   client:
     serviceUrl:
       defaultZone: http://localhost:8088/eureka
