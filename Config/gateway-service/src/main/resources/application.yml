@@ -3,9 +3,9 @@ spring:
     name: gateway-service
   config:
     import:
-      - optional:configserver:http://localhost:8081
+      - optional:configserver:http://localhost:8888
   cloud:
     config:
-      uri: http://localhost:8081
+      uri: http://localhost:8888
       username: root
       password: s3cr3t
