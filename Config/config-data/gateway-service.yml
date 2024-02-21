@@ -7,13 +7,6 @@ spring:
       discovery:
         locator:
           enabled: true
-      routes:
-      - id: salesmanagement-service
-        uri: lb://salesmanagement-service
-        predicates:
-        - Path=/salesmanagement-service/**
-        filters:
-          - StripPrefix=1
 
 eureka:
   instance:
