@@ -6,13 +6,4 @@ spring:
     gateway:
       discovery:
         locator:
-          enabled: true
-
-eureka:
-  instance:
-    hostname: localhost
-  client:
-    service-url:
-      defaultZone: http://localhost:8088/eureka           
-
-
+          enabled: true       
