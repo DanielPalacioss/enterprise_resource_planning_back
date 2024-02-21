@@ -4,18 +4,18 @@ server:
 spring:
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
+      mvc:
         routes:
-        - id: salesmanagement-service
-          uri: lb://salesmanagement-service
-          predicates:
-            - Path=/api/**
+          - id: SALESMANAGEMENT-SERVICE
+            uri: lb://SALESMANAGEMENT-SERVICE
+            predicates:
+              - Path=/api/**
 
 eureka:
   instance:
     hostname: localhost
   client:
+    registerWithEureka: true
+    fetchRegistry: true
     service-url:
       defaultZone: http://localhost:8088/eureka
