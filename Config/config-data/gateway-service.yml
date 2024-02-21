@@ -12,10 +12,20 @@ spring:
           uri: lb://SALESMANAGEMENT-SERVICE
           predicates:
             - Path=/api/**
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowed Methods: "*"
+            allowedHeaders: "*" 
 
 eureka:
   instance:
     hostname: localhost
   client:
+    registerWithEureka: true
+    fetchRegistry: true
     service-url:
-      defaultZone: http://localhost:8088/eureka         
+      defaultZone: http://localhost:8761/eureka         
