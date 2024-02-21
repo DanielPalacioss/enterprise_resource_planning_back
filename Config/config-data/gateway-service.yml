@@ -4,26 +4,13 @@ server:
 spring:
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
       routes:
-        - id: SALESMANAGEMENT-SERVICE
-          uri: http://localhost:8082/
+        - id: salesmanagement-service
+          uri: http://localhost:8082
           predicates:
             - Path=/api/**
-      default-filters:
-        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-      globalcors:
-        cors-configurations:
-          '[/**]':
-            allowedOrigins: "*"
-            allowedMethods: "*"
-            allowedHeaders: "*" 
 
 eureka:
-  instance:
-    hostname: localhost
   client:
     registerWithEureka: true
     fetchRegistry: true
