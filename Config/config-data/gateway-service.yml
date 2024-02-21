@@ -4,6 +4,9 @@ server:
 spring:
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true
       routes:
         - id: SALESMANAGEMENT-SERVICE
           uri: lb://SALESMANAGEMENT-SERVICE
