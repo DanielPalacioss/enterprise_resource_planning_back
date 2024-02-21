@@ -6,8 +6,16 @@ spring:
     gateway:
       discovery:
         locator:
-          enabled: true       
+          enabled: true
+        routes:
+        - id: salesmanagement-service
+          uri: lb://salesmanagement-service
+          predicates:
+            - Path=/api/**
+
 eureka:
+  instance:
+    hostname: localhost
   client:
     service-url:
-      defaultZone: http://localhost:8088/eureka 
+      defaultZone: http://localhost:8088/eureka
