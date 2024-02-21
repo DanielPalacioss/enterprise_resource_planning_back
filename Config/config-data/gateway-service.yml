@@ -12,8 +12,6 @@ spring:
           uri: lb://SALESMANAGEMENT-SERVICE
           predicates:
             - Path=/api/**
-      default-filters:
-        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
 
 eureka:
   client:
