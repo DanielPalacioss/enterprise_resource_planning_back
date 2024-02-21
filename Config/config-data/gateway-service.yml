@@ -4,12 +4,20 @@ server:
 spring:
   cloud:
     gateway:
-      mvc:
-        routes:
-          - id: SALESMANAGEMENT-SERVICE
-            uri: lb://SALESMANAGEMENT-SERVICE
-            predicates:
-              - Path=/api/**
+      routes:
+        - id: SALESMANAGEMENT-SERVICE
+          uri: lb://SALESMANAGEMENT-SERVICE
+          predicates:
+            - Path=/api/**
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowed Methods: "*"
+            allowedHeaders: "*" 
+
 
 eureka:
   instance:
