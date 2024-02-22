@@ -11,7 +11,7 @@ spring:
         - id: SALESMANAGEMENT-SERVICE
           uri: lb://SALESMANAGEMENT-SERVICE
           predicates:
-            - Path=/api/**
+            - Path=/sm/**
 
 eureka:
   instance:
