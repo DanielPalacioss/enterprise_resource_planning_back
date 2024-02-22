@@ -25,7 +25,6 @@ management:
     web:
       exposure:
         include: "*"
-boot:
-  admin:
-    client:
-      url: http://localhost:8099
+  info:
+    env:
+      enabled: true
