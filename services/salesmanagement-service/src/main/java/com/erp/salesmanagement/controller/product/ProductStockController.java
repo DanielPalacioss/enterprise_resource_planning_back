@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/productStock")
+@RequestMapping("sm/productStock")
 @CrossOrigin(origins = "http://localhost:8082")
 public class ProductStockController {
     @Autowired

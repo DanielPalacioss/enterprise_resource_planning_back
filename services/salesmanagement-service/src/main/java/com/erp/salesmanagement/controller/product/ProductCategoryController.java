@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/productCategory")
+@RequestMapping("sm/productCategory")
 @CrossOrigin(origins = "http://localhost:8082")
 public class ProductCategoryController {
     @Autowired

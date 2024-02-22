@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/customerType")
+@RequestMapping("sm/customerType")
 @CrossOrigin(origins = "http://localhost:8082")
 public class CustomerTypeController {
 
