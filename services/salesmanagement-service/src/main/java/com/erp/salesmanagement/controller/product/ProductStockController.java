@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/productStock")
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:8082")
 public class ProductStockController {
     @Autowired
     ProductStockService productStockService;
