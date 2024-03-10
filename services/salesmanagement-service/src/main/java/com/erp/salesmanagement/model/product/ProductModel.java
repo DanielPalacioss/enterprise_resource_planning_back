@@ -1,10 +1,13 @@
 package com.erp.salesmanagement.model.product;
 
+import com.erp.salesmanagement.model.order.OrderDetails;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -74,5 +77,31 @@ public class ProductModel {
         else {
             setEarnings(getSalePrice()-getCostPrice());
         }
+    }
+    public List<OrderDetails> productsListToOrderDetailsList(List<ProductModel> productList)
+    {
+        List<OrderDetails> orderDetailsList1 = new ArrayList<OrderDetails>();
+        for(ProductModel products: productList) {
+            OrderDetails orderDetails = new OrderDetails();
+            Double subtotalWithVat, subtotalWithDiscount;
+            orderDetails.setProductNumber(products.getProductNumber());
+            orderDetails.setDiscount(products.getDiscount());
+            orderDetails.setUnitPrice(products.getSalePrice());
+            orderDetails.setUnits(products.getQuantity());
+            orderDetails.setProductVat(products.getProductVat());
+            orderDetails.setProductReference(products.getProductReference());
+            orderDetails.setSubtotal((double) (products.getSalePrice() * products.getQuantity()));
+            subtotalWithVat = orderDetails.getSubtotal() + (orderDetails.getSubtotal() * products.getProductVat()) / 100;
+            subtotalWithDiscount = orderDetails.getSubtotal() - ((orderDetails.getSubtotal() * products.getDiscount()) / 100);
+            if (products.getDiscount() > 0) {
+                if (products.getProductVat() > 0)
+                    orderDetails.setTotal(subtotalWithDiscount + ((subtotalWithDiscount * products.getProductVat()) / 100));
+
+                else orderDetails.setTotal(subtotalWithDiscount);
+            } else if (products.getProductVat() > 0) orderDetails.setTotal(subtotalWithVat);
+            else orderDetails.setTotal(orderDetails.getSubtotal());
+            orderDetailsList1.add(orderDetails);
+        }
+        return orderDetailsList1;
     }
 }

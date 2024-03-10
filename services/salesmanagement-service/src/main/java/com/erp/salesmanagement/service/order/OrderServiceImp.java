@@ -3,15 +3,14 @@ package com.erp.salesmanagement.service.order;
 import com.erp.salesmanagement.error.exceptions.RequestException;
 import com.erp.salesmanagement.model.order.OrderModel;
 import com.erp.salesmanagement.model.order.OrderStatusModel;
-import com.erp.salesmanagement.model.order.ProductDetails;
+import com.erp.salesmanagement.model.order.OrderDetails;
+import com.erp.salesmanagement.model.product.ProductModel;
 import com.erp.salesmanagement.repository.order.OrderRepository;
 import com.erp.salesmanagement.repository.order.OrderStatusRepository;
 import com.erp.salesmanagement.service.customer.CustomerService;
 import com.erp.salesmanagement.service.product.ProductStockService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,15 +22,18 @@ public class OrderServiceImp implements OrderService {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderServiceImp.class);
     private final OrderRepository orderRepository;
+    private ProductModel productModel = new ProductModel();
     private final OrderStatusRepository orderStatusRepository;
-    @Autowired
-    private CustomerService customerService;
-    @Autowired
-    private ProductStockService productStockService;
 
-    public OrderServiceImp(OrderRepository orderRepository, OrderStatusRepository orderStatusRepository) {
+    private final CustomerService customerService;
+
+    private final ProductStockService productStockService;
+
+    public OrderServiceImp(OrderRepository orderRepository, OrderStatusRepository orderStatusRepository, CustomerService customerService, ProductStockService productStockService) {
         this.orderRepository = orderRepository;
         this.orderStatusRepository = orderStatusRepository;
+        this.customerService = customerService;
+        this.productStockService = productStockService;
     }
 
     @Override
@@ -80,12 +82,12 @@ public class OrderServiceImp implements OrderService {
             orderModel.setProductsJson(orderModel.convertStringToJsonNode(orderModel.getProducts()));
             orderModel.convertJsonToProductList();
             updatedOrder.convertJsonToProductList();
-            List<ProductDetails> productDetailsList = new ArrayList<ProductDetails>();
-            orderModel.setProductDetailsList(productDetailsList);
-            updatedOrder.getProductList().forEach(product -> orderModel.addProductDetails(product));
-            orderModel.convertDetailsListToJson(orderModel.getProductDetailsList());
+            orderModel.setSubTotal(null);
+            orderModel.setTotal(null);
+            orderModel.setOrderDetailsList(productModel.productsListToOrderDetailsList(updatedOrder.getProductList()));
+            orderModel.setOrderDetailsJson(orderModel.convertClassListToJson(orderModel.getOrderDetailsList()));
             orderModel.setOrderDetails(orderModel.getOrderDetailsJson().toString());
-            orderModel.convertProductsListToJson(updatedOrder.getProductList());
+            orderModel.setProductsJson(orderModel.convertClassListToJson(updatedOrder.getProductList()));
             orderModel.setUpdateDate(LocalDateTime.now());
             orderModel.setProducts(orderModel.getProductsJson().toString());
             orderModel.setCustomer(updatedOrder.getCustomer());
@@ -152,14 +154,14 @@ public class OrderServiceImp implements OrderService {
             if (orderStatus == null) {
                 throw new RequestException("Order status not found with status preparing", "404-Not Found");
             }
-            List<ProductDetails> productDetailsList = new ArrayList<ProductDetails>();
+            List<OrderDetails> orderDetailsList = new ArrayList<OrderDetails>();
             orderModel.setOrderStatus(orderStatus);
             orderModel.setProducts(orderModel.getProductsJson().toString());
             orderModel.convertJsonToProductList();
             productStockService.reduceStock(orderModel.getProductList());
-            orderModel.setProductDetailsList(productDetailsList);
-            orderModel.getProductList().forEach(product -> orderModel.addProductDetails(product));
-            orderModel.convertDetailsListToJson(orderModel.getProductDetailsList());
+            orderModel.setOrderDetailsList(orderDetailsList);
+            orderModel.setOrderDetailsList(productModel.productsListToOrderDetailsList(orderModel.getProductList()));
+            orderModel.setOrderDetailsJson(orderModel.convertClassListToJson(orderModel.getOrderDetailsList()));
             orderModel.setOrderDetails(orderModel.getOrderDetailsJson().toString());
             logger.info("Start the creation of order");
             orderRepository.save(orderModel);

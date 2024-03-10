@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
-public class ProductDetails {
+public class OrderDetails {
 
     @NotNull
     private int productNumber;

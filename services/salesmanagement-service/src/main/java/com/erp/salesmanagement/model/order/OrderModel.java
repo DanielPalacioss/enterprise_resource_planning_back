@@ -72,10 +72,24 @@ public class OrderModel {
     private JsonNode productsJson;
 
     @Transient
-    private List<ProductDetails> productDetailsList;
+    private List<OrderDetails> orderDetailsList;
 
     @Transient
     private List<ProductModel> productList;
+
+    public void setOrderDetailsList(List<OrderDetails> orderDetailsList) {
+        for(OrderDetails orderDetails : orderDetailsList)
+        {
+            if (getSubTotal() == null && getTotal() == null) {
+                setSubTotal(orderDetails.getSubtotal());
+                setTotal(orderDetails.getTotal());
+            } else {
+                setSubTotal(getSubTotal() + orderDetails.getSubtotal());
+                setTotal(getTotal() + orderDetails.getTotal());
+            }
+        }
+        this.orderDetailsList = orderDetailsList;
+    }
 
     public JsonNode convertStringToJsonNode(String jsonString) {
         try {
@@ -92,6 +106,7 @@ public class OrderModel {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
             setProductList(jsonNodeToList(productsJson, ProductModel.class, objectMapper));
+            // Valida de que un producto aparezca mas de 1 vez en los productos comprados
             getProductList().forEach(product ->
             {
                 int productNumber =product.getProductNumber();
@@ -111,61 +126,23 @@ public class OrderModel {
             throw new RuntimeException(e);
         }
     }
-    public void convertDetailsListToJson(List<ProductDetails> productDetailsList) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        setOrderDetailsJson(objectMapper.valueToTree(productDetailsList));
-    }
-    public void convertProductsListToJson(List<ProductModel> productsList) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        setProductsJson(objectMapper.valueToTree(productsList));
-    }
-    public void addProductDetails(ProductModel productModel)
-    {
-        Double subtotalWithVat, subtotalWithDiscount;
-        ProductDetails productDetails= new ProductDetails();
-        productDetails.setProductNumber(productModel.getProductNumber());
-        productDetails.setDiscount(productModel.getDiscount());
-        productDetails.setUnitPrice(productModel.getSalePrice());
-        productDetails.setUnits(productModel.getQuantity());
-        productDetails.setProductVat(productModel.getProductVat());
-        productDetails.setProductReference(productModel.getProductReference());
-        productDetails.setSubtotal((double) (productModel.getSalePrice() * productModel.getQuantity()));
-        subtotalWithVat = productDetails.getSubtotal()+(productDetails.getSubtotal()*productModel.getProductVat())/100;
-        subtotalWithDiscount = productDetails.getSubtotal()-((productDetails.getSubtotal()*productModel.getDiscount())/100);
-        if(productModel.getDiscount()>0)
-        {
-            if(productModel.getProductVat()>0) productDetails.setTotal(subtotalWithDiscount+((subtotalWithDiscount*productModel.getProductVat())/100));
 
-            else productDetails.setTotal(subtotalWithDiscount);
-        }
-        else if (productModel.getProductVat()>0) productDetails.setTotal(subtotalWithVat);
-        else productDetails.setTotal(productDetails.getSubtotal());
-        if (getSubTotal()==null && getTotal()==null)
-        {
-            setSubTotal(productDetails.getSubtotal());
-            setTotal(productDetails.getTotal());
-        }
-        else
-        {
-            setSubTotal(getSubTotal()+productDetails.getSubtotal());
-            setTotal(getTotal()+productDetails.getTotal());
-        }
-        productDetailsList.add(productDetails);
+   public <T> JsonNode convertClassListToJson(List<T> list) {
+       ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        return objectMapper.valueToTree(list);
     }
+
     private static <T> List<T> jsonNodeToList(JsonNode jsonNode, Class<T> valueType, ObjectMapper objectMapper) throws IOException{
         if (jsonNode.isArray()) {
             ArrayNode arrayNode = (ArrayNode) jsonNode;
             Iterator<JsonNode> elements = arrayNode.elements();
             List<T> resultList = new ArrayList<>();
-
             while (elements.hasNext()) {
                 JsonNode element = elements.next();
                 T item = objectMapper.treeToValue(element, valueType);
                 resultList.add(item);
             }
-
             return resultList;
         }
         return null;
