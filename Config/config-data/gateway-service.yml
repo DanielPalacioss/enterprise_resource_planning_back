@@ -10,8 +10,7 @@ spring:
       routes:
         - id: SALESMANAGEMENT-SERVICE
           uri: lb://SALESMANAGEMENT-SERVICE
-          predicates:
-            - Path=/sm/**
+          Path: /sm/**
   datasource:
     url: jdbc:postgresql://localhost:5432/db_business_management_platform?currentSchema=sc_business_management_platform&ssl=false
     username: postgres

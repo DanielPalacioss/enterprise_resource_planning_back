@@ -1,7 +1,6 @@
 package com.erp.gateway.controller;
 
 import com.erp.gateway.model.AuthenticationRequest;
-import com.erp.gateway.model.AuthenticationResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody @Valid AuthenticationRequest authRequest)
+    public ResponseEntity<?> login(@RequestBody @Valid AuthenticationRequest authRequest)
     {
         return null;
     }

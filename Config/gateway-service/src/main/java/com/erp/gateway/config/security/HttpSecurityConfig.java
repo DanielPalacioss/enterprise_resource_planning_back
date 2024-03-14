@@ -1,14 +1,15 @@
 package com.erp.gateway.config.security;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
+@Configuration
 @EnableWebSecurity
 public class HttpSecurityConfig {
 
@@ -20,9 +21,8 @@ public class HttpSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(csrfConfig -> csrfConfig.disable())
                 .sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .authorizeHttpRequests(authConfig -> {
@@ -30,7 +30,7 @@ public class HttpSecurityConfig {
                     authConfig.requestMatchers(HttpMethod.GET, "auth/public").permitAll();
                     authConfig.requestMatchers("error").permitAll();
                     authConfig.requestMatchers(HttpMethod.GET, "customer").hasAuthority("READ_CUSTOMER");
-                    authConfig.requestMatchers("sm/**").hasAuthority("ALL_SALESMANAGEMENT");
+                    authConfig.requestMatchers("sm/**").permitAll();
                     authConfig.anyRequest().denyAll();
                 });
     return http.build();
