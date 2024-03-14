@@ -2,24 +2,22 @@ package com.erp.gateway.config.security;
 
 import com.erp.gateway.error.exceptions.RequestException;
 import com.erp.gateway.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@EnableMethodSecurity
+@Configuration
 public class SecurityBeansInjector {
 
-    private final UserRepository userRepository;
-
-    public SecurityBeansInjector(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private UserRepository userRepository;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -45,7 +43,7 @@ public class SecurityBeansInjector {
     public UserDetailsService userDetailsService()
     {
         return username -> {
-            return userRepository.findByUsername().orElseThrow(() -> new RequestException("User not found with id","404-Not Found"));
+            return userRepository.findByUsername(username).orElseThrow(() -> new RequestException("User not found with id","404-Not Found"));
         };
     }
 }
