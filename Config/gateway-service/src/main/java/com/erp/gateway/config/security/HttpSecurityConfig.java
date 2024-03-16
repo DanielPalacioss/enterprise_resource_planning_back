@@ -30,9 +30,9 @@ public class HttpSecurityConfig {
                     authConfig.requestMatchers(HttpMethod.GET, "auth/public").permitAll();
                     authConfig.requestMatchers("error").permitAll();
                     authConfig.requestMatchers(HttpMethod.GET, "customer").hasAuthority("READ_CUSTOMER");
-                    authConfig.requestMatchers("sm/**").permitAll();
+                    authConfig.requestMatchers("sm/**").hasAuthority("ALL_SALESMANAGEMENT");
                     authConfig.anyRequest().denyAll();
                 });
-    return http.build();
+        return http.build();
     }
 }

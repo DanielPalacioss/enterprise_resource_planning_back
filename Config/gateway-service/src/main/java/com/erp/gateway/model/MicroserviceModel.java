@@ -2,9 +2,11 @@ package com.erp.gateway.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Table(name = "microservice")
 public class MicroserviceModel {
