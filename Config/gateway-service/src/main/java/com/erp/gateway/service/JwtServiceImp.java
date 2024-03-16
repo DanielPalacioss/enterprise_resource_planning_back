@@ -1,6 +1,7 @@
 package com.erp.gateway.service;
 
 import com.erp.gateway.model.UserModel;
+import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -26,15 +27,14 @@ public class JwtServiceImp implements JwtService{
 
         Date issuedAt = new Date(System.currentTimeMillis());
         Date expiration = new Date(issuedAt.getTime() + expirationMinutes*60*1000);
-
-        Jwts.builder().claims(extraClaims)
-                .subject(user.getUsername())
-                .issuedAt(issuedAt)
-                .expiration(expiration)
+        System.out.println(secretKey);
+        return Jwts.builder().setClaims(extraClaims)
+                .setSubject(user.getUsername())
+                .setIssuedAt(issuedAt)
+                .setExpiration(expiration)
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .signWith(generateKey(), SignatureAlgorithm.HS256)
-                .header().add("typ","JWT").and()
                 .compact();
-        return null;
     }
 
     private Key generateKey()
@@ -42,4 +42,6 @@ public class JwtServiceImp implements JwtService{
         byte[] secretAsBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(secretAsBytes);
     }
+
+
 }

@@ -105,8 +105,8 @@ public class OrderModel {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
-            setProductList(jsonNodeToList(productsJson, ProductModel.class, objectMapper));
-            // Valida de que un producto aparezca mas de 1 vez en los productos comprados
+            setProductList(jsonNodeToList(productsJson, ProductModel.class));
+            // Valida de que un producto no aparezca mas de 1 vez en los productos comprados
             getProductList().forEach(product ->
             {
                 int productNumber =product.getProductNumber();
@@ -133,7 +133,9 @@ public class OrderModel {
         return objectMapper.valueToTree(list);
     }
 
-    private static <T> List<T> jsonNodeToList(JsonNode jsonNode, Class<T> valueType, ObjectMapper objectMapper) throws IOException{
+    private static <T> List<T> jsonNodeToList(JsonNode jsonNode, Class<T> valueType) throws IOException{
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         if (jsonNode.isArray()) {
             ArrayNode arrayNode = (ArrayNode) jsonNode;
             Iterator<JsonNode> elements = arrayNode.elements();

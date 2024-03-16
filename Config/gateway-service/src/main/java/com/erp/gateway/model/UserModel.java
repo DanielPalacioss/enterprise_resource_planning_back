@@ -1,5 +1,6 @@
 package com.erp.gateway.model;
 
+import com.erp.gateway.util.Permission;
 import com.erp.gateway.util.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -10,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -64,6 +66,12 @@ public class UserModel implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        role.setPermissionsJson(role.convertStringToJsonNode(role.getPermissionsList()));
+        try {
+            role.setPermissions(role.jsonNodeToList(role.getPermissionsJson(), Permission.class));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         List<GrantedAuthority> authorities = role.getPermissions().stream().map(permission -> new SimpleGrantedAuthority(permission.getName()))
                 .collect(Collectors.toList());
         authorities.add(new SimpleGrantedAuthority("ROLE_" +role.getName()));

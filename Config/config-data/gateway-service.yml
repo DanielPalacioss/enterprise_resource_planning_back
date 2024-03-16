@@ -4,7 +4,7 @@ server:
 security:
   jwt:
     expirationMinutes: 30
-    secretKey: YXJpbiBkYW5pZWwg
+    secretKey: TUkgQ09OVFJBU0XDkUEgRVMgREFOSUVMMTIwMg==
 
 spring:
   cloud:
