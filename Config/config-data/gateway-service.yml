@@ -1,14 +1,18 @@
 server:
   port: 8080
 
+security:
+  jwt:
+    expirationMinutes: 30
+    secretKey: YXJpbiBkYW5pZWwg
+
 spring:
   cloud:
     gateway:
       discovery:
         locator:
           enabled: true
-      mvc:
-        routes:
+      routes:
         - id: SALESMANAGEMENT-SERVICE
           uri: lb://SALESMANAGEMENT-SERVICE
           predicates:
