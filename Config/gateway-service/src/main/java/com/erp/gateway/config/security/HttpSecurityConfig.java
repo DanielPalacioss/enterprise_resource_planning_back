@@ -24,15 +24,15 @@ public class HttpSecurityConfig {
         http
                 .csrf(csrfConfig -> csrfConfig.disable())
                 .sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
                 .authorizeHttpRequests(authConfig -> {
-                    authConfig.requestMatchers(HttpMethod.POST, "auth/authenticate").permitAll();
-                    authConfig.requestMatchers(HttpMethod.GET, "auth/public").permitAll();
+                    authConfig.requestMatchers(HttpMethod.GET, "/auth/authenticate").permitAll();
+                    authConfig.requestMatchers(HttpMethod.GET, "/auth/public").permitAll();
                     authConfig.requestMatchers("error").permitAll();
                     authConfig.requestMatchers(HttpMethod.GET, "customer").hasAuthority("READ_CUSTOMER");
                     authConfig.requestMatchers("sm/**").hasAuthority("ALL_SALESMANAGEMENT");
                     authConfig.anyRequest().denyAll();
-                });
+                })
+                .authenticationProvider(authenticationProvider);
         return http.build();
     }
 }

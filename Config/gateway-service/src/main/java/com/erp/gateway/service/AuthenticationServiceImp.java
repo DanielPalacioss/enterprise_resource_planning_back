@@ -41,4 +41,5 @@ public class AuthenticationServiceImp implements AuthenticationService{
         extraClaims.put("role", user.getRole().getName());
         return extraClaims;
     }
+
 }

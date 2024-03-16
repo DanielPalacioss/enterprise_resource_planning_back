@@ -9,4 +9,10 @@ spring:
       uri: http://localhost:8888
       username: root
       password: s3cr3t
-
+  security:
+    user:
+      name: daniel
+      password: $2a$10$kHTLI/iNlhV4JkFx7ZC7yeA5S7.w8BLz5BeSRFONMT3gC39owsdkC
+  main:
+    allow-bean-definition-overriding: true
+    web-application-type: reactive
