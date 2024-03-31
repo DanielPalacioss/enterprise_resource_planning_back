@@ -1,5 +1,10 @@
 server:
-  port: 8095
+  port: 8090
+
+security:
+  jwt:
+    expirationMinutes: 30
+    secretKey: TUkgQ09OVFJBU0XDkUEgRVMgTVVZIFNFR1VSQSBFUyBEQU5JRUwxMjAyIGx1ZGExMjAyIGphamE=
 
 spring:
   datasource:
@@ -17,5 +22,7 @@ eureka:
   instance:
     hostname: localhost
   client:
-    serviceUrl:
+    registerWithEureka: true
+    fetchRegistry: true
+    service-url:
       defaultZone: http://${eureka.instance.hostname}:8761/eureka
