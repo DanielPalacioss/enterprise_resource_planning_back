@@ -1,6 +1,7 @@
 spring:
   application:
     name: salesmanagement-service
+
   config:
     import:
       - optional:configserver:http://localhost:8888
