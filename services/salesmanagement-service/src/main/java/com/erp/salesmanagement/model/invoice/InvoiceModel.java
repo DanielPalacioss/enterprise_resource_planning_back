@@ -16,7 +16,7 @@ public class InvoiceModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @NotNull
     @Column(name = "paid", nullable = false)
@@ -37,12 +37,12 @@ public class InvoiceModel {
 
     @ManyToOne
     @JoinColumn(name = "invoiceStatus")
-    InvoiceStatusModel invoiceStatus;
+    private InvoiceStatusModel invoiceStatus;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "paymentMethod")
-    InvoicePaymentMethodModel paymentMethod;
+    private InvoicePaymentMethodModel paymentMethod;
 
     @NotNull
     @OneToOne
