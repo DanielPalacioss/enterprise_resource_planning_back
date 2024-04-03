@@ -1,11 +1,7 @@
 package com.erp.gateway.config.security.filter;
 
-import com.erp.gateway.model.UserModel;
-import com.erp.gateway.repository.UserRepository;
-import com.erp.gateway.service.JwtService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
@@ -14,28 +10,20 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class JwtAuthenticationFilter implements WebFilter {
-    @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        String authHeader = exchange.getRequest().getHeaders().getFirst("Authorization");
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        ServerHttpRequest request = exchange.getRequest();
+        String path = request.getPath().value();
+        if (path.contains("auth"))
             return chain.filter(exchange);
-        }
-
-        String jwt = authHeader.split(" ")[1];
-        String username = jwtService.extractUsername(jwt);
-        UserModel user = userRepository.findByUsername(username).get();
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                username, null, user.getAuthorities()
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authToken);
+        String auth = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+        if (auth == null)
+            return Mono.error(new Throwable("no token was found"));
+        if (!auth.startsWith("Bearer "))
+            return Mono.error(new Throwable("invalid auth"));
+        String token = auth.replace("Bearer ", "");
+        exchange.getAttributes().put("token", token);
         return chain.filter(exchange);
     }
     /*@Autowired

@@ -26,7 +26,7 @@ public class Role {
     @NotBlank(message = "name cannot be blank or null")
     private String name;
 
-    @Column(name = "permissionsList",columnDefinition = "TEXT", nullable = false)
+    @Column(name = "permissionsList", columnDefinition = "TEXT", nullable = false)
     private String permissionsList;
 
     @Transient
@@ -50,6 +50,7 @@ public class Role {
             throw new RuntimeException(e);
         }
     }
+
     public <T> List<T> jsonNodeToList(JsonNode jsonNode, Class<T> valueType) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());

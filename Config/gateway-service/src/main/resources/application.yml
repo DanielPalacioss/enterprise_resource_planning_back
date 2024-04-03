@@ -2,6 +2,17 @@ spring:
   application:
     name: gateway-service
 
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db_business_management_platform?currentSchema=sc_business_management_platform&ssl=false
+    username: postgres
+    password: 6012
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
   config:
     import:
       - optional:configserver:http://localhost:8888
@@ -10,6 +21,12 @@ spring:
       uri: http://localhost:8888
       username: root
       password: s3cr3t
+
+service:
+  security:
+    user:
+      name: daniel
+      password: luda1202
 
 logging:
   level:
