@@ -17,6 +17,19 @@ spring:
           uri: lb://SALESMANAGEMENT-SERVICE
           predicates:
             - Path=/sm/**
+          filters:
+            - GatewayAuthBasicFilter
+            
+    datasource:
+    url: jdbc:postgresql://localhost:5432/db_business_management_platform?currentSchema=sc_business_management_platform&ssl=false
+    username: postgres
+    password: 6012
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true        
             
 eureka:
   instance:

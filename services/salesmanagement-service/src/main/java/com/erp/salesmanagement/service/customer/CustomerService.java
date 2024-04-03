@@ -1,6 +1,7 @@
 package com.erp.salesmanagement.service.customer;
 
 import com.erp.salesmanagement.model.customer.CustomerModel;
+
 import java.util.List;
 
 public interface CustomerService {

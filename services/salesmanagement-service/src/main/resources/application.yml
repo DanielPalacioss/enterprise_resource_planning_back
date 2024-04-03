@@ -10,3 +10,13 @@ spring:
       uri: http://localhost:8888
       username: root
       password: s3cr3t
+
+service:
+  security:
+    user:
+      name: daniel
+      password: $2a$10$kHTLI/iNlhV4JkFx7ZC7yeA5S7.w8BLz5BeSRFONMT3gC39owsdkC
+
+logging:
+  level:
+    org.springframework.security.web: DEBUG

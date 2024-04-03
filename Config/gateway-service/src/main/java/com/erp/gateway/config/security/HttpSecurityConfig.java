@@ -1,65 +1,52 @@
 package com.erp.gateway.config.security;
 
 import com.erp.gateway.config.security.filter.JwtAuthenticationFilter;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.erp.gateway.config.security.jwt.SecurityContextRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.savedrequest.NoOpServerRequestCache;
+import reactor.core.publisher.Mono;
 
 @Configuration
 @EnableWebFluxSecurity
+@AllArgsConstructor
 public class HttpSecurityConfig {
-    @Autowired
-    private ReactiveAuthenticationManager authenticationManager;  //Inyectar el AuthenticationManager reactivo
 
-    @Autowired
     private JwtAuthenticationFilter authenticationFilter;
+
+    private SecurityContextRepository securityContextRepository;
 
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
-                .csrf(csrfConfig -> csrfConfig.disable())
-                .httpBasic(httpBasicSpec -> httpBasicSpec.disable())  //Habilitar autenticación HTTP Basic (si es necesario)
-                .formLogin(formLoginSpec -> formLoginSpec.disable())
-                .authenticationManager(authenticationManager)  //Establecer el AuthenticationManager reactivo
-                .addFilterBefore(authenticationFilter, SecurityWebFiltersOrder.AUTHORIZATION)
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
+                .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
+                .requestCache(requestCache -> requestCache.requestCache(NoOpServerRequestCache.getInstance()))
+                .securityContextRepository(securityContextRepository)
+                .addFilterAfter(authenticationFilter, SecurityWebFiltersOrder.FIRST)
+                .exceptionHandling(exceptionHandlingSpec -> {
+                    exceptionHandlingSpec.authenticationEntryPoint((exchange, exception) -> Mono.error(exception))
+                            .accessDeniedHandler((exchange, exception) -> Mono.error(exception));
+                })
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers(HttpMethod.GET, "/auth/authenticate", "/auth/public", "/error").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/auth/authenticate").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/auth/public").permitAll()
+                        .pathMatchers("/error").permitAll()
+                        .pathMatchers(HttpMethod.GET, "auth/publico").hasAuthority("ALL_SALESMANAGEMENT")
                         // .pathMatchers(HttpMethod.GET, "sm/customer/**").hasAuthority("READ_CUSTOMER")
-                        // .pathMatchers("sm/**").hasAuthority("ALL_SALESMANAGEMENT")
+                        .pathMatchers("/sm/**").hasAuthority("ALL_SALESMANAGEMENT")
                         .anyExchange().denyAll()
                 )
                 .build();
     }
-    /*@Autowired
-    private AuthenticationProvider authenticationProvider;
-
-    @Autowired
-    private JwtAuthenticationFilter authenticationFilter;
-
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(csrfConfig -> csrfConfig.disable())
-                .sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests(authConfig -> {
-                    authConfig.requestMatchers(HttpMethod.GET, "/auth/authenticate").permitAll();
-                    authConfig.requestMatchers( "/auth/public").permitAll();
-                    authConfig.requestMatchers("error").permitAll();
-                    //authConfig.requestMatchers(HttpMethod.GET, "sm/customer/**").hasAuthority("READ_CUSTOMER");
-                    //authConfig.requestMatchers("sm/**").hasAuthority("ALL_SALESMANAGEMENT");
-                    authConfig.anyRequest().denyAll();
-                }).build();
-    }*/
 }
 
 

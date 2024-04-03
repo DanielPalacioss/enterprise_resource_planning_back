@@ -2,7 +2,6 @@ package com.erp.gateway.controller;
 
 import com.erp.gateway.model.AuthenticationRequest;
 import com.erp.gateway.model.AuthenticationResponse;
-import com.erp.gateway.repository.PermissionRepository;
 import com.erp.gateway.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,18 +16,13 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
 
-    @Autowired
-    private PermissionRepository permissionRepository;
-
     @GetMapping("/authenticate")
-    public AuthenticationResponse login(@RequestBody AuthenticationRequest authRequest)
-    {
+    public AuthenticationResponse login(@RequestBody AuthenticationRequest authRequest) {
         return authenticationService.login(authRequest);
     }
 
     @GetMapping("/public")
-    public String publico()
-    {
+    public String publico() {
         /*List<String> permisos =new ArrayList<>();
         permisos.add("ALL_SALESMANAGEMENT");
         permisos.add("READ_CUSTOMER");
@@ -37,9 +31,9 @@ public class AuthenticationController {
         return "aaa";
 
     }
+
     @GetMapping("/publico")
-    public String publicos()
-    {
+    public String publicos() {
         return "prueba de seguridad";
     }
 }

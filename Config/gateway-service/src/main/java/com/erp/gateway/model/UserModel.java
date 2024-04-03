@@ -74,7 +74,7 @@ public class UserModel implements UserDetails {
         }
         List<GrantedAuthority> authorities = role.getPermissions().stream().map(permission -> new SimpleGrantedAuthority(permission.getName()))
                 .collect(Collectors.toList());
-        authorities.add(new SimpleGrantedAuthority("ROLE_" +role.getName()));
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
         return authorities;
     }
 
