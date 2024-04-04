@@ -26,31 +26,4 @@ public class JwtAuthenticationFilter implements WebFilter {
         exchange.getAttributes().put("token", token);
         return chain.filter(exchange);
     }
-    /*@Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    private UserRepository userRepository;
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
-        String authHeader = request.getHeader("Authorization");
-
-        if(authHeader == null || !authHeader.startsWith("Bearer "))
-        {
-            filterChain.doFilter(request, response);
-            return;
-        }
-        String jwt = authHeader.split(" ")[1];
-        String username = jwtService.extractUsername(jwt);
-        UserModel user = userRepository.findByUsername(username).get();
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                username, null, user.getAuthorities()
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authToken);
-
-        filterChain.doFilter(request, response);
-
-    }*/
 }
