@@ -1,5 +1,6 @@
 package com.erp.gateway.config.security;
 
+import com.erp.gateway.config.gateway.filter.GatewayAuthBasicFilter;
 import com.erp.gateway.config.security.filter.JwtAuthenticationFilter;
 import com.erp.gateway.config.security.jwt.SecurityContextRepository;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ public class HttpSecurityConfig {
 
     private SecurityContextRepository securityContextRepository;
 
+    private GatewayAuthBasicFilter gatewayAuthBasicFilter;
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
@@ -32,6 +34,7 @@ public class HttpSecurityConfig {
                 .requestCache(requestCache -> requestCache.requestCache(NoOpServerRequestCache.getInstance()))
                 .securityContextRepository(securityContextRepository)
                 .addFilterAfter(authenticationFilter, SecurityWebFiltersOrder.FIRST)
+                .addFilterAfter(gatewayAuthBasicFilter, SecurityWebFiltersOrder.AUTHORIZATION)
                 .exceptionHandling(exceptionHandlingSpec -> {
                     exceptionHandlingSpec.authenticationEntryPoint((exchange, exception) -> Mono.error(exception))
                             .accessDeniedHandler((exchange, exception) -> Mono.error(exception));
