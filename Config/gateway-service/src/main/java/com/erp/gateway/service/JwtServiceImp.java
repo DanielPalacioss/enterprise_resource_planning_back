@@ -17,10 +17,10 @@ import java.util.Map;
 @Service
 public class JwtServiceImp implements JwtService {
 
-    @Value("${security.jwt.expirationMinutes}")
+    @Value("${service.security.jwt.expirationMinutes}")
     private long expirationMinutes;
 
-    @Value("${security.jwt.secretKey}")
+    @Value("${service.security.jwt.secretKey}")
     private String secretKey;
 
     private static final Logger logger = LoggerFactory.getLogger(JwtServiceImp.class);

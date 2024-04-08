@@ -1,6 +1,6 @@
 spring:
   application:
-    name: gateway-service
+    name: mailsender-service
 
   config:
     import:
@@ -10,8 +10,3 @@ spring:
       uri: http://localhost:8888
       username: root
       password: s3cr3t
-
-logging:
-  level:
-    org.springframework.security.web: DEBUG
-    org.springframework.cloud.gateway: DEBUG

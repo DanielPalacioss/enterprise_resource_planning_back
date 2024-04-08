@@ -5,6 +5,7 @@ import com.erp.salesmanagement.model.Status;
 import com.erp.salesmanagement.model.product.ProductCategoryModel;
 import com.erp.salesmanagement.repository.StatusRepository;
 import com.erp.salesmanagement.repository.product.ProductCategoryRepository;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,16 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class ProductCategoryServiceImp implements ProductCategoryService{
 
     private static final Logger logger = LoggerFactory.getLogger(ProductCategoryServiceImp.class);
     private final ProductCategoryRepository productCategoryRepository;
     private final StatusRepository statusRepository;
-
-    public ProductCategoryServiceImp(ProductCategoryRepository productCategoryRepository, StatusRepository statusRepository) {
-        this.productCategoryRepository = productCategoryRepository;
-        this.statusRepository = statusRepository;
-    }
 
     @Override
     public List<ProductCategoryModel> listOfAllProductCategory(String status) {

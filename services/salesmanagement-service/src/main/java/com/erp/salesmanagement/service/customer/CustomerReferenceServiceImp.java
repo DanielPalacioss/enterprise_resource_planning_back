@@ -5,6 +5,7 @@ import com.erp.salesmanagement.model.Status;
 import com.erp.salesmanagement.model.customer.CustomerReferenceModel;
 import com.erp.salesmanagement.repository.StatusRepository;
 import com.erp.salesmanagement.repository.customer.CustomerReferenceRepository;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,16 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class CustomerReferenceServiceImp implements CustomerReferenceService {
     private static final Logger logger = LoggerFactory.getLogger(CustomerReferenceServiceImp.class);
     private final CustomerReferenceRepository customerReferenceRepository;
     private final StatusRepository statusRepository;
-
-    public CustomerReferenceServiceImp(CustomerReferenceRepository customerReferenceRepository, StatusRepository statusRepository) {
-        this.customerReferenceRepository = customerReferenceRepository;
-        this.statusRepository = statusRepository;
-    }
-
 
     @Override
     public List<CustomerReferenceModel> listOfAllCustomersReference(String status) {

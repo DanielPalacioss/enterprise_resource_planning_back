@@ -5,6 +5,7 @@ import com.erp.gateway.util.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -50,19 +51,25 @@ public class UserModel implements UserDetails {
     @Column(name = "email", length = 80, nullable = false, unique = true)
     private String email;
 
+    @Column(name = "emailIsConfirmed", nullable = false)
+    private Boolean emailIsConfirmed;
+
+    @Column(name = "isAccountNonLocked", nullable = false)
+    private Boolean isAccountNonLocked;
+
+    @Column(name = "isEnabled", nullable = false)
+    private Boolean isEnabled;
+
     @Column(name = "creationDate", nullable = false, updatable = false)
     private LocalDateTime creationDate;
 
     @Column(name = "updateDate")
     private LocalDateTime updateDate;
 
+    @NotNull(message = "role cannot be null")
     @ManyToOne
     @JoinColumn(name = "role", nullable = false)
     private Role role;
-
-    @ManyToOne
-    @JoinColumn(name = "microservice", updatable = false, nullable = false)
-    private MicroserviceModel microservice;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -85,7 +92,7 @@ public class UserModel implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return this.isAccountNonLocked;
     }
 
     @Override
@@ -95,6 +102,6 @@ public class UserModel implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.isEnabled;
     }
 }

@@ -5,6 +5,7 @@ import com.erp.salesmanagement.model.Status;
 import com.erp.salesmanagement.model.customer.CustomerTypeModel;
 import com.erp.salesmanagement.repository.StatusRepository;
 import com.erp.salesmanagement.repository.customer.CustomerTypeRepository;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,16 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class CustomerTypeServiceImp implements CustomerTypeService{
     private static final Logger logger = LoggerFactory.getLogger(CustomerTypeServiceImp.class);
     private final CustomerTypeRepository customerTypeRepository;
     private final StatusRepository statusRepository;
-
-    public CustomerTypeServiceImp(CustomerTypeRepository customerTypeRepository, StatusRepository statusRepository) {
-        this.customerTypeRepository = customerTypeRepository;
-        this.statusRepository = statusRepository;
-    }
-
 
     @Override
     public List<CustomerTypeModel> listOfAllCustomersType(String status) {

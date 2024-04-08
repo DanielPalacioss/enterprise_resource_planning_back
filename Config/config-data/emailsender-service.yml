@@ -1,0 +1,17 @@
+server:
+  port: 8090
+
+service:
+  security:
+    user:
+      name: daniel
+      password: luda1202
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka

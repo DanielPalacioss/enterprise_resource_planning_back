@@ -1,10 +1,14 @@
 server:
   port: 8080
 
-security:
-  jwt:
-    expirationMinutes: 30
-    secretKey: TUkgQ09OVFJBU0XDkUEgRVMgTVVZIFNFR1VSQSBFUyBEQU5JRUwxMjAyIGx1ZGExMjAyIGphamE=
+service:
+  security:
+    user:
+      name: daniel
+      password: luda1202
+    jwt:
+      expirationMinutes: 30
+      secretKey: TUkgQ09OVFJBU0XDkUEgRVMgTVVZIFNFR1VSQSBFUyBEQU5JRUwxMjAyIGx1ZGExMjAyIGphamE=
 
 spring:
   cloud:
