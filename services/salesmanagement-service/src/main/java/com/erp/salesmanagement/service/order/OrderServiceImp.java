@@ -22,11 +22,9 @@ public class OrderServiceImp implements OrderService {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderServiceImp.class);
     private final OrderRepository orderRepository;
-    private ProductModel productModel = new ProductModel();
+    private final ProductModel productModel = new ProductModel();
     private final OrderStatusRepository orderStatusRepository;
-
     private final CustomerService customerService;
-
     private final ProductStockService productStockService;
 
     public OrderServiceImp(OrderRepository orderRepository, OrderStatusRepository orderStatusRepository, CustomerService customerService, ProductStockService productStockService) {

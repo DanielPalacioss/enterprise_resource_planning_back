@@ -9,6 +9,7 @@ import com.erp.salesmanagement.repository.invoice.InvoiceRepository;
 import com.erp.salesmanagement.repository.invoice.InvoiceStatusRepository;
 import com.erp.salesmanagement.service.order.OrderService;
 import com.erp.salesmanagement.service.product.ProductStockService;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class InvoiceServiceImp implements InvoiceService{
 
     private static final Logger logger = LoggerFactory.getLogger(InvoiceServiceImp.class);
@@ -26,16 +28,8 @@ public class InvoiceServiceImp implements InvoiceService{
     private final InvoiceRepository invoiceRepository;
     private final InvoiceStatusRepository invoiceStatusRepository;
     private final InvoicePaymentMethodRepository invoicePaymentMethodRepository;
-    @Autowired
-    private ProductStockService productStockService;
-    @Autowired
-    private OrderService orderService;
-
-    public InvoiceServiceImp(InvoiceRepository invoiceRepository, InvoiceStatusRepository invoiceStatusRepository, InvoicePaymentMethodRepository invoicePaymentMethodRepository) {
-        this.invoiceRepository = invoiceRepository;
-        this.invoiceStatusRepository = invoiceStatusRepository;
-        this.invoicePaymentMethodRepository = invoicePaymentMethodRepository;
-    }
+    private final ProductStockService productStockService;
+    private final OrderService orderService;
 
     @Override
     public List<InvoiceModel> listAllByCustomerAndDate(FilterFields filterFields) {

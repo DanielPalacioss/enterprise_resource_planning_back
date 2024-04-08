@@ -5,6 +5,7 @@ import com.erp.salesmanagement.model.Status;
 import com.erp.salesmanagement.model.invoice.InvoicePaymentMethodModel;
 import com.erp.salesmanagement.repository.StatusRepository;
 import com.erp.salesmanagement.repository.invoice.InvoicePaymentMethodRepository;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,17 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class InvoicePaymentMethodServiceImp implements InvoicePaymentMethodService{
 
     private static final Logger logger = LoggerFactory.getLogger(InvoicePaymentMethodServiceImp.class);
     private final InvoicePaymentMethodRepository paymentMethodRepository;
-
     private final StatusRepository statusRepository;
-
-    public InvoicePaymentMethodServiceImp(InvoicePaymentMethodRepository paymentMethodRepository, StatusRepository statusRepository) {
-        this.paymentMethodRepository = paymentMethodRepository;
-        this.statusRepository = statusRepository;
-    }
 
     @Override
     public List<InvoicePaymentMethodModel> listAllInvoicePaymentMethod(String status) {

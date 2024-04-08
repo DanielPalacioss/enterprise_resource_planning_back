@@ -7,6 +7,7 @@ import com.erp.salesmanagement.model.product.ProductStockModel;
 import com.erp.salesmanagement.repository.product.ProductRepository;
 import com.erp.salesmanagement.repository.product.ProductStatusRepository;
 import com.erp.salesmanagement.repository.product.ProductStockRepository;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,18 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class ProductStockServiceImp implements ProductStockService{
 
     private static final Logger logger = LoggerFactory.getLogger(ProductCategoryServiceImp.class);
     private final ProductStockRepository productStockRepository;
     private final ProductStatusRepository productStatusRepository;
     private final ProductRepository productRepository;
-
-    public ProductStockServiceImp(ProductStockRepository productStockRepository, ProductStatusRepository productStatusRepository, ProductRepository productRepository) {
-        this.productStockRepository = productStockRepository;
-        this.productStatusRepository = productStatusRepository;
-        this.productRepository = productRepository;
-    }
 
     @Override
     public ProductStockModel listProductStockByProductId(int productNumber) {
