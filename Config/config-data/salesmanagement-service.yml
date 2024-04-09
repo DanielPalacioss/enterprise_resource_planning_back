@@ -1,6 +1,12 @@
 server:
   port: 8082
 
+service:
+  security:
+    user:
+      name: daniel
+      password: $2a$10$kHTLI/iNlhV4JkFx7ZC7yeA5S7.w8BLz5BeSRFONMT3gC39owsdkC
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/db_business_management_platform?currentSchema=sc_business_management_platform&ssl=false
