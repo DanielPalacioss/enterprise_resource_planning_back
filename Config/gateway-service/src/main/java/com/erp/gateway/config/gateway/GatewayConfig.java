@@ -19,6 +19,9 @@ public class GatewayConfig {
                 .route("SALESMANAGEMENT-SERVICE", r -> r.path("/sm/**")
                         .filters(f -> f.filter(gatewayAuthBasicFilter, -1, true))
                         .uri("lb://SALESMANAGEMENT-SERVICE"))
+                .route("ACCESSCONTROL-SERVICE", r -> r.path("/ac/**")
+                        .filters(f -> f.filter(gatewayAuthBasicFilter, -1, true))
+                        .uri("lb://ACCESSCONTROL-SERVICE"))
                 .build();
     }
 }
