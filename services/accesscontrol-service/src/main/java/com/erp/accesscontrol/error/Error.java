@@ -1,4 +1,4 @@
-package com.erp.gateway.error;
+package com.erp.accesscontrol.error;
 
 import lombok.Builder;
 import lombok.Data;

@@ -1,29 +1,17 @@
 server:
-  port: 8080
+  port: 8095
 
 service:
   security:
     user:
       name: daniel
-      password: luda1202
+      password: $2a$10$kHTLI/iNlhV4JkFx7ZC7yeA5S7.w8BLz5BeSRFONMT3gC39owsdkC
+    jwt:
+      expirationMinutes: 30
+      secretKey: TUkgQ09OVFJBU0XDkUEgRVMgTVVZIFNFR1VSQSBFUyBEQU5JRUwxMjAyIGx1ZGExMjAyIGphamE=
 
 spring:
-  cloud:
-    gateway:
-      discovery:
-        locator:
-          enabled: true
-      routes:
-        - id: SALESMANAGEMENT-SERVICE
-          uri: lb://SALESMANAGEMENT-SERVICE
-          predicates:
-            - Path=/sm/**
-    
-        - id: ACCESSCONTROL-SERVICE
-          uri: lb://ACCESSCONTROL-SERVICE
-          predicates:
-            - Path=/ac/**
-            
+  cloud:        
     datasource:
     url: jdbc:postgresql://localhost:5432/db_business_management_platform?currentSchema=sc_business_management_platform&ssl=false
     username: postgres
