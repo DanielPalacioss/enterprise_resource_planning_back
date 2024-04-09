@@ -1,4 +1,4 @@
-package com.erp.gateway.error.exceptions;
+package com.erp.accesscontrol.error.exceptions;
 
 import lombok.Data;
 

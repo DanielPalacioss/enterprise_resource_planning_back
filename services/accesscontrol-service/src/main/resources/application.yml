@@ -1,6 +1,6 @@
 spring:
   application:
-    name: gateway-service
+    name: accesscontrol-service
 
   config:
     import:
@@ -14,4 +14,3 @@ spring:
 logging:
   level:
     org.springframework.security.web: DEBUG
-    org.springframework.cloud.gateway: DEBUG

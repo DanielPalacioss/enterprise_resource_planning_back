@@ -1,6 +1,6 @@
-package com.erp.gateway.error;
+package com.erp.accesscontrol.error;
 
-import com.erp.gateway.error.exceptions.RequestException;
+import com.erp.accesscontrol.error.exceptions.RequestException;
 import org.springframework.validation.BindingResult;
 
 import java.util.Objects;

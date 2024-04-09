@@ -19,7 +19,6 @@ public class CustomerController {
 
     @Autowired
     CustomerService customerService;
-
     DataValidation dataValidation = new DataValidation();
 
     @GetMapping("list/{status}")

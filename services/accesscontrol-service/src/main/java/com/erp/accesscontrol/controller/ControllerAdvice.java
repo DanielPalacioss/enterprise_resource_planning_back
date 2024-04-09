@@ -1,7 +1,7 @@
-package com.erp.gateway.controller;
+package com.erp.accesscontrol.controller;
 
-import com.erp.gateway.error.Error;
-import com.erp.gateway.error.exceptions.RequestException;
+import com.erp.accesscontrol.error.Error;
+import com.erp.accesscontrol.error.exceptions.RequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
