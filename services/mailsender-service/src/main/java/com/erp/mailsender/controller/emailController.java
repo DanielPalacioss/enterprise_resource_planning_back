@@ -39,6 +39,7 @@ public class emailController {
             Files.copy(emailWithFileDTO.file().getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
             File file = path.toFile();
             emailService.sendEmailWithFile(emailWithFileDTO.toUser(), emailWithFileDTO.subject(), emailWithFileDTO.message(), file);
+            Files.delete(path);
             return ResponseEntity.status(HttpStatus.OK).body("The email has been sent successfully.");
         }catch (Exception e){
             throw new RequestException("Error with sent file","400-Bad Request");
