@@ -18,15 +18,11 @@ spring:
           uri: lb://SALESMANAGEMENT-SERVICE
           predicates:
             - Path=/sm/**
-          filters:
-            - name: GatewayAuthBasicFilter
     
         - id: ACCESSCONTROL-SERVICE
           uri: lb://ACCESSCONTROL-SERVICE
           predicates:
             - Path=/ac/**
-          filters:
-            - name: GatewayAuthBasicFilter
             
     datasource:
     url: jdbc:postgresql://localhost:5432/db_business_management_platform?currentSchema=sc_business_management_platform&ssl=false
