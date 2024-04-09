@@ -5,7 +5,18 @@ service:
   security:
     user:
       name: daniel
-      password: luda1202
+      password: $2a$10$kHTLI/iNlhV4JkFx7ZC7yeA5S7.w8BLz5BeSRFONMT3gC39owsdkC
+  mail:
+    user:
+      name: managementdaniel17@gmail.com
+      password: jefgegnyevmljgla
+
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 eureka:
   instance:
