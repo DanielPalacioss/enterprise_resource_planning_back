@@ -4,12 +4,10 @@ import com.erp.mailsender.dto.EmailDTO;
 import com.erp.mailsender.dto.EmailWithFileDTO;
 import com.erp.mailsender.error.exceptions.RequestException;
 import com.erp.mailsender.service.EmailService;
-import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -23,7 +21,7 @@ import java.nio.file.StandardCopyOption;
 @AllArgsConstructor
 public class emailController {
 
-    private EmailService emailService;
+    private final EmailService emailService;
 
     @PostMapping("sendEmail")
     public ResponseEntity<?> sendEmail(@RequestBody EmailDTO emailDTO)
