@@ -37,13 +37,14 @@ public class HttpSecurityConfig {
                             .accessDeniedHandler((exchange, exception) -> Mono.error(exception));
                 })
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers(HttpMethod.GET, "/auth/authenticate").permitAll()
-                        .pathMatchers(HttpMethod.GET, "/auth/public").permitAll()
+                        .pathMatchers(HttpMethod.GET, "ac/auth/authenticate").permitAll()
+                        .pathMatchers(HttpMethod.GET, "ac/auth/public").permitAll()
                         .pathMatchers("/error").permitAll()
-                        .pathMatchers(HttpMethod.GET, "auth/publico").hasAuthority("ALL_SALESMANAGEMENT")
+                        .pathMatchers(HttpMethod.GET, "/ac/auth/publico").hasAuthority("ALL_SALESMANAGEMENT")
+                        //.pathMatchers(HttpMethod.GET, "/ac/**").hasAuthority("ALL_SALESMANAGEMENT")
                         // .pathMatchers(HttpMethod.GET, "sm/customer/**").hasAuthority("READ_CUSTOMER")
                         .pathMatchers("/sm/**").hasAuthority("ALL_SALESMANAGEMENT")
-                        .anyExchange().denyAll()
+                        .anyExchange().permitAll()
                 )
                 .build();
     }
