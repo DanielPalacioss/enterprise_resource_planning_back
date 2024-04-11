@@ -6,6 +6,9 @@ service:
     user:
       name: daniel
       password: luda1202
+    jwt:
+      secretKey: TUkgQ09OVFJBU0XDkUEgRVMgTVVZIFNFR1VSQSBFUyBEQU5JRUwxMjAyIGx1ZGExMjAyIGphamE=
+
 
 spring:
   cloud:

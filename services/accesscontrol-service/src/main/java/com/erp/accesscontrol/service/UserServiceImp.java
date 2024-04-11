@@ -1,6 +1,5 @@
 package com.erp.accesscontrol.service;
 
-import com.erp.accesscontrol.config.security.jwt.JwtAuthenticationManager;
 import com.erp.accesscontrol.error.exceptions.RequestException;
 import com.erp.accesscontrol.model.UpdateEmail;
 import com.erp.accesscontrol.model.UpdatePassword;
@@ -23,7 +22,6 @@ public class UserServiceImp implements UserService{
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImp.class);
     private final UserRepository userRepository;
     private final JwtService jwtService;
-    private final JwtAuthenticationManager jwtAuthenticationManager;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -44,7 +42,7 @@ public class UserServiceImp implements UserService{
 
     @Override
     public void updateUser(UserModel updateUser, String token) {
-        jwtAuthenticationManager.authenticate(new UsernamePasswordAuthenticationToken(token, token));
+        jwtService.validate(token);
         String username = jwtService.extractUsername(token);
         UserModel supportOrAdmin =  userRepository.findByUsername(jwtService.extractUsername(token)).orElseThrow(() -> new RequestException("Username "+jwtService.extractUsername(token)+" not found","404-Not found"));
         UserModel user =  userRepository.findById(updateUser.getId()).orElseThrow(() -> new RequestException("Username "+jwtService.extractUsername(token)+" not found","404-Not found"));
@@ -77,7 +75,7 @@ public class UserServiceImp implements UserService{
 
     @Override
     public void updatePassword(UpdatePassword updatePassword) {
-        jwtAuthenticationManager.authenticate(new UsernamePasswordAuthenticationToken(updatePassword.token(), updatePassword.token()));
+        jwtService.validate(updatePassword.token());
         String username = jwtService.extractUsername(updatePassword.token());
         if(updatePassword.username().equals(username))
         {

@@ -30,9 +30,7 @@ public class HttpSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-
         authenticationManagerBuilder.inMemoryAuthentication()
                 .withUser(username)
                 .password(password)
