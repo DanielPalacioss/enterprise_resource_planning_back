@@ -30,6 +30,5 @@ public class SecurityContextRepository implements ServerSecurityContextRepositor
                 .flatMap(token -> Mono.just(new UsernamePasswordAuthenticationToken(token, token))
                         .flatMap(jwtAuthenticationManager::authenticate)
                         .map(SecurityContextImpl::new));
-
     }
 }

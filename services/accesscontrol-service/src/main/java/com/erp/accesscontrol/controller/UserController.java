@@ -17,18 +17,5 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:8095")
 public class UserController {
 
-    @Autowired
-    private UserRepository userRepository;
-    DataValidation dataValidation = new DataValidation();
-
-    @GetMapping("getAuthorities/{username}")
-    public ResponseEntity<Collection<? extends GrantedAuthority>> getAuthorities(@PathVariable String username)
-    {
-        return ResponseEntity
-                .ok(userRepository.findByUsername(username)
-                .orElseThrow(
-                        () -> new RequestException("Username "+username+" not found","404-Not Found"))
-                .getAuthorities());
-    }
 
 }
