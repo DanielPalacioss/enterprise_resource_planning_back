@@ -1,6 +1,8 @@
 package com.erp.accesscontrol.service;
 
+import com.erp.accesscontrol.error.exceptions.RequestException;
 import com.erp.accesscontrol.model.UserModel;
+import com.erp.accesscontrol.repository.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -23,7 +25,13 @@ public class JwtServiceImp implements JwtService {
     @Value("${service.security.jwt.secretKey}")
     private String secretKey;
 
+    private final UserRepository userRepository;
+
     private static final Logger logger = LoggerFactory.getLogger(JwtServiceImp.class);
+
+    public JwtServiceImp(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public String generateToken(UserModel user, Map<String, Object> extraClaims) {
@@ -46,16 +54,21 @@ public class JwtServiceImp implements JwtService {
 
     @Override
     public Claims extractAllClaims(String jwt) {
-        return Jwts.parser()
-                .verifyWith(generateKey())
-                .build()
-                .parseSignedClaims(jwt)
-                .getPayload();
+        try {
+            return Jwts.parser()
+                    .verifyWith(generateKey())
+                    .build()
+                    .parseSignedClaims(jwt)
+                    .getPayload();
+        }catch (ExpiredJwtException e) {
+            throw new RequestException("jwt expired","400-Bad Request");
+        }
     }
 
     @Override
     public Boolean validate(String jwt) {
         try {
+            if(userRepository.findByUsername(extractUsername(jwt)).isEmpty()) throw new RequestException("Username not found","404-Not found");
             Jwts.parser()
                     .verifyWith(generateKey())
                     .build()
@@ -64,17 +77,16 @@ public class JwtServiceImp implements JwtService {
                     .getSubject();
             return true;
         } catch (ExpiredJwtException e) {
-            logger.error("jwt expired");
+            throw new RequestException("jwt expired","400-Bad Request");
         } catch (UnsupportedJwtException e) {
-            logger.error("jwt unsupported");
+            throw new RequestException("jwt unsupported","400-Bad Request");
         } catch (MalformedJwtException e) {
-            logger.error("jwt malformed");
+            throw new RequestException("jwt malformed","400-Bad Request");
         } catch (SignatureException e) {
-            logger.error("bad signature");
+            throw new RequestException("bad signature","400-Bad Request");
         } catch (IllegalArgumentException e) {
-            logger.error("illegal args");
+            throw new RequestException("illegal args","400-Bad Request");
         }
-        return false;
     }
 
     @Override

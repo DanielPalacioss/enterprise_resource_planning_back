@@ -19,17 +19,6 @@ public class AuthenticationController {
         return authenticationService.login(authRequest);
     }
 
-    @GetMapping("/public")
-    public String publico() {
-        /*List<String> permisos =new ArrayList<>();
-        permisos.add("ALL_SALESMANAGEMENT");
-        permisos.add("READ_CUSTOMER");
-        List<Permission> permissions = permissionRepository.findAllByName(permisos);
-        System.out.println(permissions);*/
-        return "aaa";
-
-    }
-
     @GetMapping("/publico")
     public String publicos() {
         return "prueba de seguridad";
