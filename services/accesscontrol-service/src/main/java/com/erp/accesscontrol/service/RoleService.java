@@ -1,10 +1,13 @@
 package com.erp.accesscontrol.service;
 
-import com.erp.accesscontrol.util.Role;
+import com.erp.accesscontrol.model.RoleModel;
+
+import java.util.List;
 
 public interface RoleService {
 
-    void saveRole(Role role);
-
-
+    List<RoleModel> getAllRole(String status);
+    void saveRole(RoleModel role);
+    void updateRole(RoleModel updateRole);
+    void deleteRole(Long roleId);
 }

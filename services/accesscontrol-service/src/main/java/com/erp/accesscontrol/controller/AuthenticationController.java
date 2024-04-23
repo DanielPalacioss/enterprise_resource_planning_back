@@ -1,26 +1,21 @@
 package com.erp.accesscontrol.controller;
 
-import com.erp.accesscontrol.model.AuthenticationRequest;
-import com.erp.accesscontrol.model.AuthenticationResponse;
+import com.erp.accesscontrol.dto.AuthenticationRequestDTO;
+import com.erp.accesscontrol.dto.AuthenticationResponseDTO;
 import com.erp.accesscontrol.service.AuthenticationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("ac/auth")
 @CrossOrigin(origins = "http://localhost:8095")
+@AllArgsConstructor
 public class AuthenticationController {
 
-    @Autowired
-    private AuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
 
     @GetMapping("/authenticate")
-    public AuthenticationResponse login(@RequestBody AuthenticationRequest authRequest) {
+    public AuthenticationResponseDTO login(@RequestBody AuthenticationRequestDTO authRequest) {
         return authenticationService.login(authRequest);
-    }
-
-    @GetMapping("/publico")
-    public String publicos() {
-        return "prueba de seguridad";
     }
 }

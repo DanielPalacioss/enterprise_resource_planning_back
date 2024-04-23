@@ -32,8 +32,8 @@ public class InvoiceController {
         return ResponseEntity.ok(invoiceService.listAllInvoices(status));
     }
 
-    @GetMapping("/listById")
-    public ResponseEntity<InvoiceModel> listByInvoiceId(@RequestParam Long invoiceId) {
+    @GetMapping("/{invoiceId}")
+    public ResponseEntity<InvoiceModel> listByInvoiceId(@PathVariable Long invoiceId) {
         return ResponseEntity.ok(invoiceService.listByInvoiceId(invoiceId));
     }
 

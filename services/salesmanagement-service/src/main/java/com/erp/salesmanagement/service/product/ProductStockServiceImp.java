@@ -28,22 +28,16 @@ public class ProductStockServiceImp implements ProductStockService{
     @Override
     public ProductStockModel listProductStockByProductId(int productNumber) {
         logger.info("starting search product stock by product number");
-        ProductStockModel productStock= productStockRepository.findByProduct_productNumber(productNumber);
-        if (productStock == null) throw new RequestException("ProductStock not found with product number " + productNumber,"404-Not Found");
+        ProductStockModel productStock= productStockRepository.findByProduct_productNumber(productNumber).orElseThrow(() -> new RequestException("ProductStock not found with product number " + productNumber,"404-Not Found"));
         return productStock;
     }
 
     @Override
     public void updateProductStock(ProductStockModel updateProductStock) {
-        ProductStockModel productStock= productStockRepository.findByProduct_productNumber(updateProductStock.getProduct().getProductNumber());
-        if (productStock == null) throw new RequestException("ProductStock not found with product number " + updateProductStock.getProduct().getProductNumber(),"404-Not Found");
+        ProductStockModel productStock= productStockRepository.findByProduct_productNumber(updateProductStock.getProduct().getProductNumber()).orElseThrow(() -> new RequestException("ProductStock not found with product number " + updateProductStock.getProduct().getProductNumber(),"404-Not Found"));
         productStock.setUpdateDate(LocalDateTime.now());
         productStock.setQuantity(updateProductStock.getQuantity());
-        ProductModel product = productRepository.findById(productStock.getProduct().getProductNumber()).orElseThrow(() -> new RequestException("Product not found with id " + productStock.getProduct().getProductNumber(),"404-Not Found"));
-        ProductStatusModel productStatusModel = productStatusRepository.findByStatus(productStock.updateStatusProduct());
-        if(productStatusModel == null) throw new RequestException("Status not found with status: "+ productStock.updateStatusProduct(), "404-Not Found");
-        product.setProductStatus(productStatusModel);
-        productRepository.save(product);
+        saveProductStatus(productStock);
         logger.info("Start the modification of product stock");
         productStockRepository.save(productStock);
     }
@@ -54,12 +48,10 @@ public class ProductStockServiceImp implements ProductStockService{
         List<ProductStockModel> productsStock = new ArrayList<ProductStockModel>();
         productList.forEach(product -> {
             if(product.getQuantity()<1) throw new RequestException("The minimum product quantity is 1","400-Bad Request");
-            ProductStockModel productStock= productStockRepository.findByProduct_productNumber(product.getProductNumber());
-            if (productStock == null) throw new RequestException("ProductStock not found with product number " + product.getProductNumber(),"404-Not Found");
-            else if(productStock.getQuantity() < product.getQuantity()) throw new RequestException("The product with product number " +product.getProductNumber()+ " only has " +productStock.getQuantity()+" units, the purchase must be equal to or less than said quantity.","400-Bad Request");
+            ProductStockModel productStock= productStockRepository.findByProduct_productNumber(product.getProductNumber()).orElseThrow(() -> new RequestException("ProductStock not found with product number " + product.getProductNumber(),"404-Not Found"));
+            if(productStock.getQuantity() < product.getQuantity()) throw new RequestException("The product with product number " +product.getProductNumber()+ " only has " +productStock.getQuantity()+" units, the purchase must be equal to or less than said quantity.","400-Bad Request");
             productStock.setQuantity(productStock.getQuantity()-product.getQuantity());
-            ProductStatusModel productStatusModel = productStatusRepository.findByStatus(productStock.updateStatusProduct());
-            if(productStatusModel == null) throw new RequestException("Status not found with status: "+ productStock.updateStatusProduct(), "404-Not Found");
+            ProductStatusModel productStatusModel = productStatusRepository.findByStatus(productStock.updateStatusProduct()).orElseThrow(() -> new RequestException("Status not found with status: "+ productStock.updateStatusProduct(), "404-Not Found"));
             product.setProductStatus(productStatusModel);
             products.add(product);
             productsStock.add(productStock);
@@ -72,11 +64,9 @@ public class ProductStockServiceImp implements ProductStockService{
     @Override
     public void cancellationOfStockReduction(List<ProductModel> productList) {
         productList.forEach(product -> {
-            ProductStockModel productStock= productStockRepository.findByProduct_productNumber(product.getProductNumber());
-            if (productStock == null) throw new RequestException("ProductStock not found with product number " + product.getProductNumber(),"404-Not Found");
+            ProductStockModel productStock= productStockRepository.findByProduct_productNumber(product.getProductNumber()).orElseThrow(() -> new RequestException("ProductStock not found with product number " + product.getProductNumber(),"404-Not Found"));
             productStock.setQuantity(productStock.getQuantity()+product.getQuantity());
-            ProductStatusModel productStatusModel = productStatusRepository.findByStatus(productStock.updateStatusProduct());
-            if(productStatusModel == null) throw new RequestException("Status not found with status: "+ productStock.updateStatusProduct(), "404-Not Found");
+            ProductStatusModel productStatusModel = productStatusRepository.findByStatus(productStock.updateStatusProduct()).orElseThrow(() -> new RequestException("Status not found with status: "+ productStock.updateStatusProduct(), "404-Not Found"));
             product.setProductStatus(productStatusModel);
             productRepository.save(product);
             logger.info("Start cancellation of stock reduction");
@@ -86,18 +76,22 @@ public class ProductStockServiceImp implements ProductStockService{
 
     @Override
     public void saveProductStock(ProductStockModel productStock) {
-        if((productStock.getId() == null) && (productStockRepository.findByProduct_productNumber(productStock.getProduct().getProductNumber())==null))
+        if(productRepository.count() <1) throw new RequestException("No product created","404-Not Found");
+        if((productStock.getId() == null) && (productStockRepository.findByProduct_productNumber(productStock.getProduct().getProductNumber()).get()==null))
         {
             productStock.setCreationDate(LocalDateTime.now());
             productStock.setUpdateDate(null);
-            ProductModel product = productRepository.findById(productStock.getProduct().getProductNumber()).orElseThrow(() -> new RequestException("Product not found with id " + productStock.getProduct().getProductNumber(),"404-Not Found"));
-            ProductStatusModel productStatusModel = productStatusRepository.findByStatus(productStock.updateStatusProduct());
-            if(productStatusModel == null) throw new RequestException("Status not found with status: "+ productStock.updateStatusProduct(), "404-Not Found");
-            product.setProductStatus(productStatusModel);
-            productRepository.save(product);
+            saveProductStatus(productStock);
             logger.info("Start the creation of stock");
             productStockRepository.save(productStock);
         }
         else throw new RequestException("The product stock id must be null and the product must not already have a stock created.", "400-Bad Request");
+    }
+
+    private void saveProductStatus(ProductStockModel productStock) {
+        ProductModel product = productRepository.findById(productStock.getProduct().getProductNumber()).orElseThrow(() -> new RequestException("Product not found with id " + productStock.getProduct().getProductNumber(),"404-Not Found"));
+        ProductStatusModel productStatusModel = productStatusRepository.findByStatus(productStock.updateStatusProduct()).orElseThrow(() -> new RequestException("Status not found with status: "+ productStock.updateStatusProduct(), "404-Not Found"));
+        product.setProductStatus(productStatusModel);
+        productRepository.save(product);
     }
 }

@@ -25,14 +25,6 @@ public class JwtServiceImp implements JwtService {
     @Value("${service.security.jwt.secretKey}")
     private String secretKey;
 
-    private final UserRepository userRepository;
-
-    private static final Logger logger = LoggerFactory.getLogger(JwtServiceImp.class);
-
-    public JwtServiceImp(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
     @Override
     public String generateToken(UserModel user, Map<String, Object> extraClaims) {
 
@@ -48,11 +40,6 @@ public class JwtServiceImp implements JwtService {
     }
 
     @Override
-    public String extractUsername(String jwt) {
-        return extractAllClaims(jwt).getSubject();
-    }
-
-    @Override
     public Claims extractAllClaims(String jwt) {
         try {
             return Jwts.parser()
@@ -62,30 +49,6 @@ public class JwtServiceImp implements JwtService {
                     .getPayload();
         }catch (ExpiredJwtException e) {
             throw new RequestException("jwt expired","400-Bad Request");
-        }
-    }
-
-    @Override
-    public Boolean validate(String jwt) {
-        try {
-            if(userRepository.findByUsername(extractUsername(jwt)).isEmpty()) throw new RequestException("Username not found","404-Not found");
-            Jwts.parser()
-                    .verifyWith(generateKey())
-                    .build()
-                    .parseSignedClaims(jwt)
-                    .getPayload()
-                    .getSubject();
-            return true;
-        } catch (ExpiredJwtException e) {
-            throw new RequestException("jwt expired","400-Bad Request");
-        } catch (UnsupportedJwtException e) {
-            throw new RequestException("jwt unsupported","400-Bad Request");
-        } catch (MalformedJwtException e) {
-            throw new RequestException("jwt malformed","400-Bad Request");
-        } catch (SignatureException e) {
-            throw new RequestException("bad signature","400-Bad Request");
-        } catch (IllegalArgumentException e) {
-            throw new RequestException("illegal args","400-Bad Request");
         }
     }
 

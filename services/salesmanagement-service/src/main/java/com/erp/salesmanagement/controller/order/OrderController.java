@@ -21,8 +21,8 @@ public class OrderController {
 
     DataValidation dataValidation = new DataValidation();
 
-    @GetMapping("list/{status}")
-    public ResponseEntity<List<OrderModel>> getAllOrder(@PathVariable String status) {
+    @GetMapping
+    public ResponseEntity<List<OrderModel>> getAllOrder(@RequestParam String status) {
         return ResponseEntity.ok(orderService.listAllOrder(status));
     }
 

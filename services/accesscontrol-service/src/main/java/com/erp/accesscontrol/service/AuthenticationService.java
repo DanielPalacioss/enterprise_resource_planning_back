@@ -1,9 +1,9 @@
 package com.erp.accesscontrol.service;
 
-import com.erp.accesscontrol.model.AuthenticationRequest;
-import com.erp.accesscontrol.model.AuthenticationResponse;
+import com.erp.accesscontrol.dto.AuthenticationRequestDTO;
+import com.erp.accesscontrol.dto.AuthenticationResponseDTO;
 
 public interface AuthenticationService {
 
-    AuthenticationResponse login(AuthenticationRequest authRequest);
+    AuthenticationResponseDTO login(AuthenticationRequestDTO authRequest);
 }

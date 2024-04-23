@@ -26,15 +26,12 @@ public class ProductCategoryServiceImp implements ProductCategoryService{
     public List<ProductCategoryModel> listOfAllProductCategory(String status) {
         logger.info("Start search for all product category categories");
         List<ProductCategoryModel> productCategoryList = new ArrayList<ProductCategoryModel>();
-        if(status.replaceAll(" ","").equalsIgnoreCase("active")) {
-            productCategoryList= productCategoryRepository.findAllByStatus_Id(true);
-            if (productCategoryList.isEmpty()) throw new RequestException("La lista de categorias de producto en estado '"+status+"' está vacía","100-Continue");
-        }
-        else if (status.replaceAll(" ","").equalsIgnoreCase("inactive")) {
-            productCategoryList= productCategoryRepository.findAllByStatus_Id(false);
-            if (productCategoryList.isEmpty()) throw new RequestException("La lista de categorias de producto en estado '"+status+"' está vacía","100-Continue");
-        }
-        else throw new RequestException("No existe el estado: '"+status+"' en la categoria de producto","100-Continue");
+        if(status.replaceAll(" ","").equalsIgnoreCase("active"))
+            productCategoryList= productCategoryRepository.findAllByStatus_Id(true).orElseThrow(() -> new RequestException("La lista de categorias de producto en estado '"+status+"' está vacía","100-Continue"));
+        else if (status.replaceAll(" ","").equalsIgnoreCase("inactive"))
+            productCategoryList= productCategoryRepository.findAllByStatus_Id(false).orElseThrow(() -> new RequestException("La lista de categorias de producto en estado '"+status+"' está vacía","100-Continue"));
+        else
+            throw new RequestException("No existe el estado: '"+status+"' en la categoria de producto","100-Continue");
         return productCategoryList;
     }
 
@@ -66,6 +63,7 @@ public class ProductCategoryServiceImp implements ProductCategoryService{
 
     @Override
     public void saveProductCategory(ProductCategoryModel productCategory) {
+        if(statusRepository.count() < 1) throw new RequestException("No status created","404-Not Found");
         if(productCategory.getId() == null) {
             Status status = statusRepository.findById(true).orElseThrow(() -> new RequestException("Status not found with id true", "404-Not Found"));
             productCategory.setStatus(status);

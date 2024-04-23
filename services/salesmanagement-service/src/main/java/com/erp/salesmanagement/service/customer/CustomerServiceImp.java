@@ -4,7 +4,10 @@ import com.erp.salesmanagement.error.exceptions.RequestException;
 import com.erp.salesmanagement.model.Status;
 import com.erp.salesmanagement.model.customer.CustomerModel;
 import com.erp.salesmanagement.repository.StatusRepository;
+import com.erp.salesmanagement.repository.customer.CustomerCategoryRepository;
+import com.erp.salesmanagement.repository.customer.CustomerReferenceRepository;
 import com.erp.salesmanagement.repository.customer.CustomerRepository;
+import com.erp.salesmanagement.repository.customer.CustomerTypeRepository;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +23,9 @@ public class CustomerServiceImp implements CustomerService{
 
     private static final Logger logger = LoggerFactory.getLogger(CustomerServiceImp.class);
     private final CustomerRepository customerRepository;
+    private final CustomerCategoryRepository customerCategoryRepository;
+    private final CustomerTypeRepository customerTypeRepository;
+    private final CustomerReferenceRepository customerReferenceRepository;
     private final StatusRepository statusRepository;
 
     @Override
@@ -27,12 +33,10 @@ public class CustomerServiceImp implements CustomerService{
         logger.info("Start search for all customers");
         List<CustomerModel> customerList= new ArrayList<CustomerModel>();
         if(status.replaceAll(" ","").equalsIgnoreCase("active")) {
-            customerList= customerRepository.findAllByStatus_Id(true);
-            if (customerList.isEmpty()) throw new RequestException("La lista de clientes en estado '"+status+"' está vacía","100-Continue");
+            customerList= customerRepository.findAllByStatus_Id(true).orElseThrow(() -> new RequestException("La lista de clientes en estado '"+status+"' está vacía","100-Continue"));
         }
         else if (status.replaceAll(" ","").equalsIgnoreCase("inactive")) {
-            customerList= customerRepository.findAllByStatus_Id(false);
-            if (customerList.isEmpty()) throw new RequestException("La lista de clientes en estado '"+status+"' está vacía","100-Continue");
+            customerList= customerRepository.findAllByStatus_Id(false).orElseThrow(() -> new RequestException("La lista de clientes en estado '"+status+"' está vacía","100-Continue"));
         }
         else throw new RequestException("No existe el estado: '"+status+"' en clientes","100-Continue");
         return customerList;
@@ -75,6 +79,10 @@ public class CustomerServiceImp implements CustomerService{
 
     @Override
     public void saveCustomer(CustomerModel customerModel) {
+        if(statusRepository.count() < 1) throw new RequestException("No status created","404-Not Found");
+        if(customerTypeRepository.count() < 1) throw new RequestException("No customer type created","404-Not Found");
+        if(customerCategoryRepository.count() < 1) throw new RequestException("No customer category created","404-Not Found");
+        if(customerReferenceRepository.count() < 1) throw new RequestException("No customer reference created","404-Not Found");
         if(customerRepository.findById(customerModel.getId()).isEmpty()) {
             Status status = statusRepository.findById(true).orElseThrow(() -> new RequestException("Status not found with id true", "404-Not Found"));
             customerModel.setStatus(status);

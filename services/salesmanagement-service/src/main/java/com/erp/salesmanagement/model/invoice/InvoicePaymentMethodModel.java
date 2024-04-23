@@ -30,6 +30,6 @@ public class InvoicePaymentMethodModel {
     private LocalDateTime updateDate;
 
     @ManyToOne
-    @JoinColumn(name = "statusId", nullable = false)
+    @JoinColumn(name = "status", nullable = false)
     private Status status;
 }

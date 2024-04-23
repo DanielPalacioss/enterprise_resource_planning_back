@@ -5,10 +5,12 @@ import com.erp.salesmanagement.model.order.OrderDetails;
 import com.erp.salesmanagement.model.order.OrderModel;
 import com.erp.salesmanagement.model.order.OrderStatusModel;
 import com.erp.salesmanagement.model.product.ProductModel;
+import com.erp.salesmanagement.repository.customer.CustomerRepository;
 import com.erp.salesmanagement.repository.order.OrderRepository;
 import com.erp.salesmanagement.repository.order.OrderStatusRepository;
 import com.erp.salesmanagement.service.customer.CustomerService;
 import com.erp.salesmanagement.service.product.ProductStockService;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,38 +20,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class OrderServiceImp implements OrderService {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderServiceImp.class);
     private final OrderRepository orderRepository;
     private final ProductModel productModel = new ProductModel();
     private final OrderStatusRepository orderStatusRepository;
+    private final CustomerRepository customerRepository;
     private final CustomerService customerService;
     private final ProductStockService productStockService;
 
-    public OrderServiceImp(OrderRepository orderRepository, OrderStatusRepository orderStatusRepository, CustomerService customerService, ProductStockService productStockService) {
-        this.orderRepository = orderRepository;
-        this.orderStatusRepository = orderStatusRepository;
-        this.customerService = customerService;
-        this.productStockService = productStockService;
-    }
+
 
     @Override
     public List<OrderModel> listAllOrder(String status) {
         logger.info("Start search for all orders");
         List<OrderModel> orderList = new ArrayList<OrderModel>();
         if (status.equals("active")) {
-            orderList = orderRepository.findAllByPreparingAndOntheway();
-            if (orderList.isEmpty())
-                throw new RequestException("La lista de pedidos en estado '" + status + "' está vacía", "100-Continue");
+            orderList = orderRepository.findAllByPreparingAndOntheway().orElseThrow(() -> new RequestException("La lista de pedidos en estado '" + status + "' está vacía", "100-Continue"));
         } else if (status.equals("delivered")) {
-            orderList = orderRepository.findAllByOrderStatus_status(status);
-            if (orderList.isEmpty())
-                throw new RequestException("La lista de pedidos en estado '" + status + "' está vacía", "100-Continue");
+            orderList = orderRepository.findAllByOrderStatus_status(status).orElseThrow(() -> new RequestException("La lista de pedidos en estado '" + status + "' está vacía", "100-Continue"));
         } else if (status.equals("canceled")) {
-            orderList = orderRepository.findAllByOrderStatus_status(status);
-            if (orderList.isEmpty())
-                throw new RequestException("La lista de pedidos en estado '" + status + "' está vacía", "100-Continue");
+            orderList = orderRepository.findAllByOrderStatus_status(status).orElseThrow(() -> new RequestException("La lista de pedidos en estado '" + status + "' está vacía", "100-Continue"));
         } else throw new RequestException("No existe el estado: '" + status + "' en pedido", "100-Continue");
         orderList.forEach(orderModel ->
         {
@@ -103,27 +96,21 @@ public class OrderServiceImp implements OrderService {
         OrderModel orderModel = orderRepository.findById(orderId).orElseThrow(() -> new RequestException("Order not found with id " + orderId, "404-Not Found"));
         if (orderModel.getOrderStatus().getStatus().equals("delivered")) {
             if (status.equals("canceled")) {
-                OrderStatusModel orderStatus = orderStatusRepository.findByStatus(status);
-                if (orderStatus == null) {
-                    throw new RequestException("Order status not found with status " + status, "404-Not Found");
-                } else {
-                    orderModel.setUpdateDate(LocalDateTime.now());
-                    orderModel.setOrderStatus(orderStatus);
-                    orderModel.setProductsJson(orderModel.convertStringToJsonNode(orderModel.getProducts()));
-                    orderModel.convertJsonToProductList();
-                    productStockService.reduceStock(orderModel.getProductList());
-                    logger.info("Start the update of order status");
-                    orderRepository.save(orderModel);
-                }
+                OrderStatusModel orderStatus = orderStatusRepository.findByStatus(status).orElseThrow(() -> new RequestException("Order status not found with status " + status, "404-Not Found"));
+                orderModel.setUpdateDate(LocalDateTime.now());
+                orderModel.setOrderStatus(orderStatus);
+                orderModel.setProductsJson(orderModel.convertStringToJsonNode(orderModel.getProducts()));
+                orderModel.convertJsonToProductList();
+                productStockService.reduceStock(orderModel.getProductList());
+                logger.info("Start the update of order status");
+                orderRepository.save(orderModel);
             } else
                 throw new RequestException("The order status " + orderModel.getOrderStatus().getStatus() + " cannot be modified to " + status, "400-Bad Request");
         } else if (orderModel.getOrderStatus().getStatus().equals("canceled"))
             throw new RequestException("The order status " + orderModel.getOrderStatus().getStatus() + " cannot be modified", "400-Bad Request");
         else {
-            OrderStatusModel orderStatus = orderStatusRepository.findByStatus(status);
-            if (orderStatus == null) {
-                throw new RequestException("Order status not found with status " + status, "404-Not Found");
-            } else if (orderStatus.getStatus().equalsIgnoreCase("canceled")) {
+            OrderStatusModel orderStatus = orderStatusRepository.findByStatus(status).orElseThrow(() -> new RequestException("Order status not found with status " + status, "404-Not Found"));
+            if (orderStatus.getStatus().equalsIgnoreCase("canceled")) {
                 orderModel.setProductsJson(orderModel.convertStringToJsonNode(orderModel.getProducts()));
                 orderModel.convertJsonToProductList();
                 productStockService.reduceStock(orderModel.getProductList());
@@ -143,15 +130,14 @@ public class OrderServiceImp implements OrderService {
 
     @Override
     public void saveOrder(OrderModel orderModel) {
+        if(customerRepository.count() < 1) throw new RequestException("No customer created","404-Not Found");
+        if(orderStatusRepository.count() < 1) throw new RequestException("No order status created","404-Not Found");
         if (orderModel.getId()==null)
         {
             customerService.listCustomerById(orderModel.getCustomer().getId());
             orderModel.setCreationDate(LocalDateTime.now());
             orderModel.setUpdateDate(null);
-            OrderStatusModel orderStatus = orderStatusRepository.findByStatus("preparing");
-            if (orderStatus == null) {
-                throw new RequestException("Order status not found with status preparing", "404-Not Found");
-            }
+            OrderStatusModel orderStatus = orderStatusRepository.findByStatus("preparing").orElseThrow(() -> new RequestException("Order status not found with status preparing", "404-Not Found"));
             List<OrderDetails> orderDetailsList = new ArrayList<OrderDetails>();
             orderModel.setOrderStatus(orderStatus);
             orderModel.setProducts(orderModel.getProductsJson().toString());

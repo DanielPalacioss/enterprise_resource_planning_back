@@ -26,12 +26,10 @@ public class CustomerTypeServiceImp implements CustomerTypeService{
         logger.info("Start search for all customers type ");
         List<CustomerTypeModel> customerTypeList= new ArrayList<CustomerTypeModel>();
         if(status.replaceAll(" ","").equalsIgnoreCase("active")) {
-            customerTypeList= customerTypeRepository.findAllByStatus_Id(true);
-            if (customerTypeList.isEmpty()) throw new RequestException("La lista de type de clientes en estado '"+status+"' está vacía","100-Continue");
+            customerTypeList= customerTypeRepository.findAllByStatus_Id(true).orElseThrow(() -> new RequestException("La lista de type de clientes en estado '"+status+"' está vacía","100-Continue"));
         }
         else if (status.replaceAll(" ","").equalsIgnoreCase("inactive")) {
-            customerTypeList= customerTypeRepository.findAllByStatus_Id(false);
-            if (customerTypeList.isEmpty()) throw new RequestException("La lista de type de clientes en estado '"+status+"' está vacía","100-Continue");
+            customerTypeList= customerTypeRepository.findAllByStatus_Id(false).orElseThrow(() -> new RequestException("La lista de type de clientes en estado '"+status+"' está vacía","100-Continue"));
         }
         else throw new RequestException("No existe el estado: '"+status+"' en la type de clientes","100-Continue");
         return customerTypeList;
@@ -59,6 +57,7 @@ public class CustomerTypeServiceImp implements CustomerTypeService{
 
     @Override
     public void saveCustomerType(CustomerTypeModel customerTypeModel) {
+        if(statusRepository.count() < 1) throw new RequestException("No status created","404-Not Found");
         if(customerTypeModel.getId() == null) {
             Status status = statusRepository.findById(true).orElseThrow(() -> new RequestException("Status not found with id true", "404-Not Found"));
             customerTypeModel.setStatus(status);

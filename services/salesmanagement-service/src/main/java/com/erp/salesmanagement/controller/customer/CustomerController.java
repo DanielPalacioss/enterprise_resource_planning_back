@@ -21,8 +21,8 @@ public class CustomerController {
     CustomerService customerService;
     DataValidation dataValidation = new DataValidation();
 
-    @GetMapping("list/{status}")
-    public ResponseEntity<List<CustomerModel>> getAllCustomers(@PathVariable String status) {
+    @GetMapping
+    public ResponseEntity<List<CustomerModel>> getAllCustomers(@RequestParam String status) {
         return ResponseEntity.ok(customerService.listOfAllCustomers(status.replaceAll(" ","").toLowerCase()));
     }
 

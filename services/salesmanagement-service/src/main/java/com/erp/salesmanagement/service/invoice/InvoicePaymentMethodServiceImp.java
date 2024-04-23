@@ -27,12 +27,10 @@ public class InvoicePaymentMethodServiceImp implements InvoicePaymentMethodServi
         logger.info("Start search for all payment method");
         List<InvoicePaymentMethodModel> paymentMethodList = new ArrayList<InvoicePaymentMethodModel>();
         if(status.replaceAll(" ","").equalsIgnoreCase("active")) {
-            paymentMethodList= paymentMethodRepository.findAllByStatus_Id(true);
-            if (paymentMethodList.isEmpty()) throw new RequestException("La lista de payment method en estado '"+status+"' está vacía","100-Continue");
+            paymentMethodList= paymentMethodRepository.findAllByStatus_Id(true).orElseThrow(() -> new RequestException("La lista de payment method en estado '"+status+"' está vacía","100-Continue"));
         }
         else if (status.replaceAll(" ","").equalsIgnoreCase("inactive")) {
-            paymentMethodList= paymentMethodRepository.findAllByStatus_Id(false);
-            if (paymentMethodList.isEmpty()) throw new RequestException("La lista de payment method en estado '"+status+"' está vacía","100-Continue");
+            paymentMethodList= paymentMethodRepository.findAllByStatus_Id(false).orElseThrow(() -> new RequestException("La lista de payment method en estado '"+status+"' está vacía","100-Continue"));
         }
         else throw new RequestException("No existe el estado: '"+status+"' en la payment method","100-Continue");
         return paymentMethodList;
@@ -61,6 +59,7 @@ public class InvoicePaymentMethodServiceImp implements InvoicePaymentMethodServi
 
     @Override
     public void saveInvoicePaymentMethod(InvoicePaymentMethodModel paymentMethod) {
+        if(statusRepository.count() < 1) throw new RequestException("No status created","404-Not Found");
         if (paymentMethod.getId() == null)
         {
             Status status = statusRepository.findById(true).orElseThrow(() -> new RequestException("Status not found with id true", "404-Not Found"));
