@@ -41,8 +41,8 @@ public class InvoicePaymentMethodController {
         return ResponseEntity.status(HttpStatus.CREATED).body("The invoice payment method has been successfully modified.");
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> deletePaymentMethod(@RequestParam Long invoicePaymentMethodId)
+    @DeleteMapping("{invoicePaymentMethodId}")
+    public ResponseEntity<?> deletePaymentMethod(@PathVariable Long invoicePaymentMethodId)
     {
         invoicePaymentMethodService.deleteInvoicePaymentMethod(invoicePaymentMethodId);
         return ResponseEntity.status(HttpStatus.CREATED).body("The invoice payment method has been successfully deleted.");

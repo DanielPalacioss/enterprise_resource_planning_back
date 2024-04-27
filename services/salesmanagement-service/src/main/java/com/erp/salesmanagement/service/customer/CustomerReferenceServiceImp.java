@@ -26,12 +26,10 @@ public class CustomerReferenceServiceImp implements CustomerReferenceService {
         logger.info("Start search for all customer Reference ");
         List<CustomerReferenceModel> customerReferenceList= new ArrayList<CustomerReferenceModel>();
         if(status.replaceAll(" ","").equalsIgnoreCase("active")) {
-            customerReferenceList= customerReferenceRepository.findAllByStatus_Id(true);
-            if (customerReferenceList.isEmpty()) throw new RequestException("La lista de referencia de clientes en estado '"+status+"' está vacía","100-Continue");
+            customerReferenceList= customerReferenceRepository.findAllByStatus_Id(true).orElseThrow(() -> new RequestException("La lista de referencia de clientes en estado '"+status+"' está vacía","100-Continue"));
         }
         else if (status.replaceAll(" ","").equalsIgnoreCase("inactive")) {
-            customerReferenceList= customerReferenceRepository.findAllByStatus_Id(false);
-            if (customerReferenceList.isEmpty()) throw new RequestException("La lista de referencia de clientes en estado '"+status+"' está vacía","100-Continue");
+            customerReferenceList= customerReferenceRepository.findAllByStatus_Id(false).orElseThrow(() -> new RequestException("La lista de referencia de clientes en estado '"+status+"' está vacía","100-Continue"));
         }
         else throw new RequestException("No existe el estado: '"+status+"' en la referencia de clientes","100-Continue");
         return customerReferenceList;
@@ -59,6 +57,7 @@ public class CustomerReferenceServiceImp implements CustomerReferenceService {
 
     @Override
     public void saveCustomerReference(CustomerReferenceModel customerReferenceModel) {
+        if(statusRepository.count() < 1) throw new RequestException("No status created","404-Not Found");
         if(customerReferenceModel.getId()== null) {
             Status status = statusRepository.findById(true).orElseThrow(() -> new RequestException("Status not found with id true", "404-Not Found"));
             customerReferenceModel.setStatus(status);

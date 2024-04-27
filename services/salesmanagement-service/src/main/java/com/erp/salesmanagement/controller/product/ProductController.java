@@ -21,8 +21,8 @@ public class ProductController {
 
     private static final DataValidation dataValidation = new DataValidation();
 
-    @GetMapping("list/{status}")
-    public ResponseEntity<List<ProductModel>> getAllProducts(@PathVariable String status) {
+    @GetMapping("list")
+    public ResponseEntity<List<ProductModel>> getAllProducts(@RequestParam String status) {
         return ResponseEntity.ok(productService.listOfAllProduct(status));
     }
 

@@ -1,6 +1,7 @@
 package com.erp.salesmanagement.controller.product;
 
 import com.erp.salesmanagement.error.DataValidation;
+import com.erp.salesmanagement.model.order.OrderDetails;
 import com.erp.salesmanagement.model.product.ProductModel;
 import com.erp.salesmanagement.model.product.ProductStockModel;
 import com.erp.salesmanagement.service.product.ProductStockService;
@@ -35,18 +36,18 @@ public class ProductStockController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> reduceProductStock(@Valid @RequestBody List<ProductModel> productList, BindingResult bindingResult)
+    public ResponseEntity<?> reduceProductStock(@Valid @RequestBody List<OrderDetails> orderDetails, BindingResult bindingResult)
     {
         dataValidation.handleValidationError(bindingResult);
-        productStockService.reduceStock(productList);
+        productStockService.reduceStock(orderDetails);
         return ResponseEntity.status(HttpStatus.CREATED).body("The stock of the products or the product sold was satisfactorily reduced.");
     }
 
     @PutMapping("/cancellationOfStockReduction")
-    public ResponseEntity<?> cancellationOfStockReduction(@Valid @RequestBody List<ProductModel> productList, BindingResult bindingResult)
+    public ResponseEntity<?> cancellationOfStockReduction(@Valid @RequestBody List<OrderDetails> orderDetails, BindingResult bindingResult)
     {
         dataValidation.handleValidationError(bindingResult);
-        productStockService.cancellationOfStockReduction(productList);
+        productStockService.cancellationOfStockReduction(orderDetails);
         return ResponseEntity.status(HttpStatus.CREATED).body("The stock of the products or the product sold was satisfactorily cancellation of stock reduction.");
     }
 

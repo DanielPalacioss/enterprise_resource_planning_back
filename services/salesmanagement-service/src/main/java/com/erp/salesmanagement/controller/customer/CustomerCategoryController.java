@@ -21,8 +21,8 @@ public class CustomerCategoryController {
     CustomerCategoryService customerCategoryService;
 
     DataValidation dataValidation = new DataValidation();
-    @GetMapping("/{status}")
-    public ResponseEntity<List<CustomerCategoryModel>> getAllCustomersCategory(@PathVariable String status) {
+    @GetMapping
+    public ResponseEntity<List<CustomerCategoryModel>> getAllCustomersCategory(@RequestParam String status) {
         return ResponseEntity.ok(customerCategoryService.listOfAllCustomersCategory(status));
     }
 

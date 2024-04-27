@@ -21,8 +21,8 @@ public class CustomerReferenceController {
     CustomerReferenceService customerReferenceService;
 
     DataValidation dataValidation = new DataValidation();
-    @GetMapping("/{status}")
-    public ResponseEntity<List<CustomerReferenceModel>> getAllCustomersReference(@PathVariable String status) {
+    @GetMapping
+    public ResponseEntity<List<CustomerReferenceModel>> getAllCustomersReference(@RequestParam String status) {
         return ResponseEntity.ok(customerReferenceService.listOfAllCustomersReference(status.replaceAll(" ","").toLowerCase()));
     }
 

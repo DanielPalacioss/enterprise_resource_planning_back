@@ -27,12 +27,10 @@ public class CustomerCategoryServiceImp implements CustomerCategoryService {
         logger.info("Start search for all customer category");
         List<CustomerCategoryModel> customerCategoryList= new ArrayList<CustomerCategoryModel>();
         if(status.replaceAll(" ","").equalsIgnoreCase("active")) {
-            customerCategoryList= customerCategoryRepository.findAllByStatus_Id(true);
-            if (customerCategoryList.isEmpty()) throw new RequestException("La lista de categoria de clientes en estado '"+status+"' está vacía","100-Continue");
+            customerCategoryList= customerCategoryRepository.findAllByStatus_Id(true).orElseThrow(() -> new RequestException("La lista de categoria de clientes en estado '"+status+"' está vacía","100-Continue"));
         }
         else if (status.replaceAll(" ","").equalsIgnoreCase("inactive")) {
-            customerCategoryList= customerCategoryRepository.findAllByStatus_Id(false);
-            if (customerCategoryList.isEmpty()) throw new RequestException("La lista de categoria de clientes en estado '"+status+"' está vacía","100-Continue");
+            customerCategoryList= customerCategoryRepository.findAllByStatus_Id(false).orElseThrow(() -> new RequestException("La lista de categoria de clientes en estado '"+status+"' está vacía","100-Continue"));
         }
         else throw new RequestException("No existe el estado: '"+status+"' en la categoria de clientes","100-Continue");
         return customerCategoryList;
@@ -60,6 +58,7 @@ public class CustomerCategoryServiceImp implements CustomerCategoryService {
 
     @Override
     public void saveCustomerCategory(CustomerCategoryModel customerCategoryModel) {
+        if(statusRepository.count() < 1) throw new RequestException("No status created","404-Not Found");
         if(customerCategoryModel.getId()==null) {
             Status status = statusRepository.findById(true).orElseThrow(() -> new RequestException("Status not found with id true", "404-Not Found"));
             customerCategoryModel.setStatus(status);

@@ -5,8 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CustomerTypeRepository extends JpaRepository<CustomerTypeModel, Long> {
-    List<CustomerTypeModel> findAllByStatus_Id(Boolean status);
+    Optional<List<CustomerTypeModel>> findAllByStatus_Id(Boolean status);
 }

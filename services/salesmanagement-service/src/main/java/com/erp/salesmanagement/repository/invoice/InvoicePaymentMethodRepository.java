@@ -5,10 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface InvoicePaymentMethodRepository extends JpaRepository<InvoicePaymentMethodModel, Long> {
-    InvoicePaymentMethodModel findByPaymentMethod(String paymentMethod);
-
-    List<InvoicePaymentMethodModel> findAllByStatus_Id(Boolean status);
+    Optional<InvoicePaymentMethodModel> findByPaymentMethod(String paymentMethod);
+    Optional<List<InvoicePaymentMethodModel>> findAllByStatus_Id(Boolean status);
 }
