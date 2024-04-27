@@ -25,7 +25,6 @@ public class GatewayConfig {
 
     @Bean
     public RouteLocator myRoutes(RouteLocatorBuilder builder) {
-
         return builder.routes()
                 .route("SALESMANAGEMENT-SERVICE", r -> r.path("/sm/**")
                         .filters(f -> f.filter(gatewayAuthBasicFilter))

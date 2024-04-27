@@ -1,4 +1,4 @@
-package com.erp.salesmanagement.config.security;
+package com.erp.salesmanagement.security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

@@ -13,7 +13,6 @@ import com.erp.salesmanagement.service.product.ProductStockService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -54,13 +53,6 @@ public class InvoiceServiceImp implements InvoiceService{
         }
         else if(filterFields.finalDate() != null) throw new RequestException("You cannot search for the invoice with only the final date.","400-Bad Request");
         else throw new RequestException("It is not possible to do a search with the data entered.","400-Bad Request");
-        invoiceList.forEach(invoice ->
-        {
-            invoice.getOrder().setProductsJson(invoice.getOrder().convertStringToJsonNode(invoice.getOrder().getProducts()));
-            invoice.getOrder().setOrderDetailsJson(invoice.getOrder().convertStringToJsonNode(invoice.getOrder().getOrderDetails()));
-            invoice.getOrder().setProducts(null);
-            invoice.getOrder().setOrderDetails(null);
-        });
         logger.info("Start search for all invoices");
         return invoiceList;
     }
@@ -77,10 +69,6 @@ public class InvoiceServiceImp implements InvoiceService{
     public InvoiceModel listByInvoiceId(Long invoiceId) {
         logger.info("starting search by invoice id");
         InvoiceModel invoice = invoiceRepository.findById(invoiceId).orElseThrow(() -> new RequestException("Invoice not found with id " + invoiceId,"404-Not Found"));
-        invoice.getOrder().setProductsJson(invoice.getOrder().convertStringToJsonNode(invoice.getOrder().getProducts()));
-        invoice.getOrder().setOrderDetailsJson(invoice.getOrder().convertStringToJsonNode(invoice.getOrder().getOrderDetails()));
-        invoice.getOrder().setProducts(null);
-        invoice.getOrder().setOrderDetails(null);
         return invoice;
     }
 
@@ -116,9 +104,7 @@ public class InvoiceServiceImp implements InvoiceService{
             else if(status.equals("canceled"))
             {
                 invoiceStatus = invoiceStatusRepository.findByStatus(status).orElseThrow(() -> new RequestException("Invoice status not found with status " + status,"404-Not Found"));
-                invoice.getOrder().setProductsJson(invoice.getOrder().convertStringToJsonNode(invoice.getOrder().getProducts()));
-                invoice.getOrder().convertJsonToProductList();
-                productStockService.cancellationOfStockReduction(invoice.getOrder().getProductList());
+                productStockService.cancellationOfStockReduction(invoice.getOrder().getOrderDetails());
             }
         }
         else throw new RequestException("You cannot change the status of a canceled invoice.","400-Bad Request");

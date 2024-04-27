@@ -1,6 +1,7 @@
 package com.erp.salesmanagement.service.product;
 
 import com.erp.salesmanagement.error.exceptions.RequestException;
+import com.erp.salesmanagement.model.order.OrderDetails;
 import com.erp.salesmanagement.model.product.ProductModel;
 import com.erp.salesmanagement.model.product.ProductStatusModel;
 import com.erp.salesmanagement.model.product.ProductStockModel;
@@ -43,15 +44,16 @@ public class ProductStockServiceImp implements ProductStockService{
     }
 
     @Override
-    public void reduceStock(List<ProductModel> productList) {
+    public void reduceStock(List<OrderDetails> orderDetails) {
         List<ProductModel> products = new ArrayList<ProductModel>();
         List<ProductStockModel> productsStock = new ArrayList<ProductStockModel>();
-        productList.forEach(product -> {
-            if(product.getQuantity()<1) throw new RequestException("The minimum product quantity is 1","400-Bad Request");
-            ProductStockModel productStock= productStockRepository.findByProduct_productNumber(product.getProductNumber()).orElseThrow(() -> new RequestException("ProductStock not found with product number " + product.getProductNumber(),"404-Not Found"));
-            if(productStock.getQuantity() < product.getQuantity()) throw new RequestException("The product with product number " +product.getProductNumber()+ " only has " +productStock.getQuantity()+" units, the purchase must be equal to or less than said quantity.","400-Bad Request");
-            productStock.setQuantity(productStock.getQuantity()-product.getQuantity());
+        orderDetails.forEach(orderDetail -> {
+            if(orderDetail.getUnits()<1) throw new RequestException("The minimum product quantity is 1","400-Bad Request");
+            ProductStockModel productStock= productStockRepository.findByProduct_productNumber(orderDetail.getProduct().getProductNumber()).orElseThrow(() -> new RequestException("ProductStock not found with product number " + orderDetail.getProduct().getProductNumber(),"404-Not Found"));
+            if(productStock.getQuantity() < orderDetail.getUnits()) throw new RequestException("The product with product number " +orderDetail.getProduct().getProductNumber()+ " only has " +productStock.getQuantity()+" units, the purchase must be equal to or less than said quantity.","400-Bad Request");
+            productStock.setQuantity(productStock.getQuantity()-orderDetail.getUnits());
             ProductStatusModel productStatusModel = productStatusRepository.findByStatus(productStock.updateStatusProduct()).orElseThrow(() -> new RequestException("Status not found with status: "+ productStock.updateStatusProduct(), "404-Not Found"));
+            ProductModel product = productRepository.findById(orderDetail.getProduct().getProductNumber()).orElseThrow(() -> new RequestException("Product not found with id " + orderDetail.getProduct().getProductNumber(),"404-Not Found"));
             product.setProductStatus(productStatusModel);
             products.add(product);
             productsStock.add(productStock);
@@ -62,11 +64,12 @@ public class ProductStockServiceImp implements ProductStockService{
     }
 
     @Override
-    public void cancellationOfStockReduction(List<ProductModel> productList) {
-        productList.forEach(product -> {
-            ProductStockModel productStock= productStockRepository.findByProduct_productNumber(product.getProductNumber()).orElseThrow(() -> new RequestException("ProductStock not found with product number " + product.getProductNumber(),"404-Not Found"));
-            productStock.setQuantity(productStock.getQuantity()+product.getQuantity());
+    public void cancellationOfStockReduction(List<OrderDetails> orderDetails) {
+        orderDetails.forEach(orderDetail -> {
+            ProductStockModel productStock= productStockRepository.findByProduct_productNumber(orderDetail.getProduct().getProductNumber()).orElseThrow(() -> new RequestException("ProductStock not found with product number " + orderDetail.getProduct().getProductNumber(),"404-Not Found"));
+            productStock.setQuantity(productStock.getQuantity()+orderDetail.getUnits());
             ProductStatusModel productStatusModel = productStatusRepository.findByStatus(productStock.updateStatusProduct()).orElseThrow(() -> new RequestException("Status not found with status: "+ productStock.updateStatusProduct(), "404-Not Found"));
+            ProductModel product = productRepository.findById(orderDetail.getProduct().getProductNumber()).orElseThrow(() -> new RequestException("Product not found with id " + orderDetail.getProduct().getProductNumber(),"404-Not Found"));
             product.setProductStatus(productStatusModel);
             productRepository.save(product);
             logger.info("Start cancellation of stock reduction");
