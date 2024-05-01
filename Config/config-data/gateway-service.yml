@@ -6,7 +6,10 @@ service:
     user:
       name: daniel
       password: luda1202
-
+    jwt:
+      expirationMinutes: 30
+      secretKey: TUkgQ09OVFJBU0XDkUEgRVMgTVVZIFNFR1VSQSBFUyBEQU5JRUwxMjAyIGx1ZGExMjAyIGphamE=
+      
 spring:
   cloud:
     gateway:
@@ -24,7 +27,7 @@ spring:
           predicates:
             - Path=/ac/**
             
-    datasource:
+  datasource:
     url: jdbc:postgresql://localhost:5432/db_business_management_platform?currentSchema=sc_business_management_platform&ssl=false
     username: postgres
     password: 6012
