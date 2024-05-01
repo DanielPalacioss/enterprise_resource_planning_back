@@ -130,9 +130,9 @@ public class InvoiceServiceImp implements InvoiceService{
             if (invoice.getInvoiceStatus().getStatus().equals("pending") && !(invoice.getExpirationDate() == null)) {
                 orderService.updateOrderStatus(invoice.getOrder().getId(), "delivered");
                 invoiceRepository.save(invoice);
-            } else if (invoice.getInvoiceStatus().getStatus().equals("pending") && invoice.getExpirationDate() == null) {
+            } else if (invoice.getInvoiceStatus().getStatus().equals("pending")) {
             throw new RequestException("If the invoice status is pending, you cannot leave the expiration date empty.", "400-Bad Request");
-            } else if (!(invoice.getExpirationDate() == null) && !invoice.getInvoiceStatus().getStatus().equals("pending")) {
+            } else if (!(invoice.getExpirationDate() == null)) {
                 throw new RequestException("There cannot be an expiration date if the invoice status is other than pending.", "400-Bad Request");
             } else {
                 orderService.updateOrderStatus(invoice.getOrder().getId(), "delivered");

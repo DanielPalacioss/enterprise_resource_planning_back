@@ -61,17 +61,24 @@ public class OrderServiceImp implements OrderService {
     public void updateOrder(OrderModel updatedOrder) {
         OrderModel orderModel = orderRepository.findById(updatedOrder.getId()).orElseThrow(() -> new RequestException("Order not found with id " + updatedOrder.getId(), "404-Not Found"));
         if (!orderModel.getOrderStatus().getStatus().equalsIgnoreCase("canceled")) {
+            List<OrderDetails> updateOrderDetails = getOrderDetailsList(updatedOrder.getOrderDetails());
             customerRepository.findById(updatedOrder.getCustomer().getId()).orElseThrow(() -> new RequestException("Customer not found with id " + updatedOrder.getCustomer().getId(),"404-Not Found"));
-            orderModel.setOrderDetails(updatedOrder.getOrderDetails());
-            orderModel.setOrderDetails(getOrderDetailsList(updatedOrder.getOrderDetails()));
-            orderModel.setOrderDetailsList();
             orderModel.setUpdateDate(LocalDateTime.now());
             orderModel.setCustomer(updatedOrder.getCustomer());
             orderModel.setShippingAddress(updatedOrder.getShippingAddress());
             orderModel.setExpirationDate(updatedOrder.getExpirationDate());
-            productStockService.cancellationOfStockReduction(orderModel.getOrderDetails());
-            productStockService.reduceStock(updatedOrder.getOrderDetails());
             logger.info("Start the modification of order");
+            productStockService.cancellationOfStockReduction(orderModel.getOrderDetails());
+            try {   productStockService.reduceStock(updatedOrder.getOrderDetails());
+            }catch (RequestException e)
+            {
+                productStockService.reduceStock(orderModel.getOrderDetails());
+                throw e;
+            }
+            orderDetailsRepository.deleteAll(orderModel.getOrderDetails());
+            orderModel.setOrderDetails(updateOrderDetails.stream().peek(orderDetail -> orderDetail.setOrderS(orderModel)).collect(Collectors.toList()));
+            orderModel.setOrderDetailsList();
+            orderDetailsRepository.saveAll(orderModel.getOrderDetails());
             orderRepository.save(orderModel);
         } else throw new RequestException("The order status " + orderModel.getOrderStatus().getStatus() + " cannot be modified ", "400-Bad Request");
     }
@@ -84,7 +91,7 @@ public class OrderServiceImp implements OrderService {
                 OrderStatusModel orderStatus = orderStatusRepository.findByStatus(status).orElseThrow(() -> new RequestException("Order status not found with status " + status, "404-Not Found"));
                 orderModel.setUpdateDate(LocalDateTime.now());
                 orderModel.setOrderStatus(orderStatus);
-                productStockService.reduceStock(orderModel.getOrderDetails());
+                productStockService.cancellationOfStockReduction(orderModel.getOrderDetails());
                 logger.info("Start the update of order status");
                 orderRepository.save(orderModel);
             } else
@@ -94,7 +101,7 @@ public class OrderServiceImp implements OrderService {
         else {
             OrderStatusModel orderStatus = orderStatusRepository.findByStatus(status).orElseThrow(() -> new RequestException("Order status not found with status " + status, "404-Not Found"));
             if (orderStatus.getStatus().equalsIgnoreCase("canceled")) {
-                productStockService.reduceStock(orderModel.getOrderDetails());
+                productStockService.cancellationOfStockReduction(orderModel.getOrderDetails());
             }
             orderModel.setUpdateDate(LocalDateTime.now());
             orderModel.setOrderStatus(orderStatus);
@@ -129,9 +136,8 @@ public class OrderServiceImp implements OrderService {
     }
     public List<OrderDetails> getOrderDetailsList(List<OrderDetails> orderDetails)
     {
-        return orderDetails.stream().map(orderDetail ->
+        return orderDetails.stream().peek(orderDetail ->
         {
-            orderDetail.setProduct(productRepository.findById(orderDetail.getProduct().getProductNumber()).orElseThrow(() -> new RequestException("Product not found with id " + orderDetail.getProduct().getProductNumber(),"404-Not Found")));
             int productNumber = orderDetail.getProduct().getProductNumber();
             AtomicInteger count= new AtomicInteger(0);
             orderDetails.forEach(orderDetails1 -> {
@@ -150,7 +156,6 @@ public class OrderServiceImp implements OrderService {
                 else orderDetail.setTotal(subtotalWithDiscount);
             } else if (orderDetail.getProduct().getProductVat() > 0) orderDetail.setTotal(subtotalWithVat);
             else orderDetail.setTotal(orderDetail.getSubtotal());
-            return orderDetail;
         }).collect(Collectors.toList());
     }
 }

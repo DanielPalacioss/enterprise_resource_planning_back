@@ -1,4 +1,4 @@
-package com.erp.accesscontrol.model;
+package com.erp.gateway.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -68,7 +68,7 @@ public class UserModel implements UserDetails {
     @Column(name = "updateDate")
     private LocalDateTime updateDate;
 
-    @OneToMany(targetEntity = UserSecurityAnswer.class, mappedBy = "user")
+    @OneToMany(targetEntity = UserSecurityAnswer.class, mappedBy = "user",fetch = FetchType.EAGER)
     private List<UserSecurityAnswer> userSecurityAnswers;
 
     @JsonIgnore

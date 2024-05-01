@@ -1,12 +1,14 @@
 package com.erp.accesscontrol.service;
 
-import com.erp.accesscontrol.model.UserSecurityQuestionsModel;
+import com.erp.accesscontrol.model.UserSecurityAnswer;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface UserManagementService {
 
-    UserSecurityQuestionsModel getUserSecurityQuestions(Long userId) throws IOException;
-    void saveUserSecurityQuestions(UserSecurityQuestionsModel userSecurityQuestions);
-    void updateUserSecurityQuestions(UserSecurityQuestionsModel updateUserSecurityQuestions);
+    List<UserSecurityAnswer> getUserSecurityAnswer(Long userId) throws IOException;
+    void saveUserSecurityQuestions(List<UserSecurityAnswer> userSecurityAnswer);
+    void updateUserSecurityQuestions(List<UserSecurityAnswer> updateUserSecurityAnswers, Long userId);
+    void deleteUserSecurityQuestion(Long userSecurityAnswerId, Long userId);
 }

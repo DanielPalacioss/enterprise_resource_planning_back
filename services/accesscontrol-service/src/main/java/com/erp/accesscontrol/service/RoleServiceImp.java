@@ -28,7 +28,6 @@ public class RoleServiceImp implements RoleService{
         if(status.replaceAll(" ","").equalsIgnoreCase("active")) roleList= roleRepository.findAllByStatus_Id(true).orElseThrow(() -> new RequestException("La lista de roles en estado '"+status+"' está vacía","100-Continue"));
         else if (status.replaceAll(" ","").equalsIgnoreCase("inactive")) roleList= roleRepository.findAllByStatus_Id(false).orElseThrow(() -> new RequestException("La lista de roles en estado '"+status+"' está vacía","100-Continue"));
         else throw new RequestException("No existe el estado: '"+status+"'","100-Continue");
-        roleList.forEach(RoleModel::convertPermissionsStringToList);
         return roleList;
     }
 
@@ -41,7 +40,6 @@ public class RoleServiceImp implements RoleService{
             role.setUpdateDate(null);
             Status status = statusRepository.findById(true).orElseThrow(() -> new RequestException("Status not found with id true", "404-Not Found"));
             role.setStatus(status);
-            role.convertPermissionsListToString();
             logger.info("Start the creation of role");
             roleRepository.save(role);
         }
@@ -51,10 +49,9 @@ public class RoleServiceImp implements RoleService{
     @Override
     public void updateRole(RoleModel updateRole) {
         RoleModel role = roleRepository.findById(updateRole.getId()).orElseThrow(() -> new RequestException("RoleModel not found","404-Not Found"));
-        role.setPermissionsList(updateRole.getPermissionsList());
-        role.convertPermissionsListToString();
         role.setName(updateRole.getName());
         Status status = statusRepository.findById(true).orElseThrow(() -> new RequestException("Status not found with id true", "404-Not Found"));
+        role.setPermissions(updateRole.getPermissions());
         role.setStatus(status);
         role.setUpdateDate(LocalDateTime.now());
         logger.info("Start the update of role");
