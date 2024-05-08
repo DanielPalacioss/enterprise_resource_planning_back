@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//Esta entity no debe ser modificada a menos que ya se haya modificado desde el servicio de accesscontrol
 @Data
 @Entity
 @Table(name = "userErp")

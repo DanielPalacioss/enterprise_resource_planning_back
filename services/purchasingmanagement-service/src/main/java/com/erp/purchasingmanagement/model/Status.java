@@ -1,4 +1,4 @@
-package com.erp.gateway.model;
+package com.erp.purchasingmanagement.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -6,7 +6,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-//Esta entity no debe ser modificada a menos que ya se haya modificado en todos los otros microservicios
 @Entity
 @Data
 @Table(name = "status")

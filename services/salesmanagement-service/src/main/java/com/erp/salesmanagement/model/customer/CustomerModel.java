@@ -19,8 +19,8 @@ public class CustomerModel {
 
     @NotBlank(message = "full name cannot be blank or null")
     @Size(min = 3, max = 60, message = "'full name' must be between 3 and 60 characters")
-    @Column(name = "fullName", length = 60, nullable = false)
-    private String fullName;
+    @Column(name = "names", length = 60, nullable = false)
+    private String names;
 
     @NotBlank(message = "last name cannot be blank or null")
     @Size(min = 3, max = 60, message = "'lastName' must be between 3 and 60 characters")

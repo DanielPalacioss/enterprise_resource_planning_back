@@ -27,6 +27,7 @@ public class HttpSecurityConfig {
                         .pathMatchers(HttpMethod.GET, "sm/customer/**").hasRole("CUSTOMER")
                         .pathMatchers("sm/**").hasAuthority("ALL_SALES_MANAGEMENT")
                         .pathMatchers("ac/**").hasAuthority("ALL_ACCESS_CONTROL")
+                        .pathMatchers("prueba/**").permitAll()
                         .anyExchange().denyAll())
                 .securityContextRepository(securityContextRepository)
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)

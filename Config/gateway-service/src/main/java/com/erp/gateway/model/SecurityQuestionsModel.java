@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+//Esta entity no debe ser modificada a menos que ya se haya modificado desde el servicio de accesscontrol
 @Data
 @Entity
 @Table(name = "securityQuestions")

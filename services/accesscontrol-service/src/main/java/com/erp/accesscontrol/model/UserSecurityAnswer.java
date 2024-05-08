@@ -27,6 +27,7 @@ public class UserSecurityAnswer {
     @Column(name = "answer", nullable = false)
     private String answer;
 
+    @JsonIgnore
     @NotNull(message = "user cannot be null")
     @ManyToOne(targetEntity = UserModel.class)
     @JoinColumn(nullable = false, updatable = false)

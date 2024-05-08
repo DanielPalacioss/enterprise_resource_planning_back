@@ -3,6 +3,7 @@ package com.erp.accesscontrol.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -17,7 +18,7 @@ public class SecurityQuestionsModel {
     private Long id;
 
     @NotBlank(message = "Question cannot be blank or null")
-    @Min(value = 3, message = "The question must be at least 3 characters")
+    @Size(min = 3,message = "The question must be at least 3 characters")
     @Column(name = "question", unique = true)
     private String question;
 

@@ -29,6 +29,6 @@ public class JwtAuthenticationManager implements ReactiveAuthenticationManager {
                         Mono.just(new UsernamePasswordAuthenticationToken(
                                 claims.getSubject(),
                                 null,
-                                userRepository.findByUsername(claims.getSubject()).orElseThrow(() -> new RequestException("asgsag", "asg")).getAuthorities())));
+                                userRepository.findByUsername(claims.getSubject()).orElseThrow(() -> new RequestException("Username " + claims.getSubject() + " not found", "404-Not found")).getAuthorities())));
     }
 }

@@ -7,7 +7,6 @@ service:
       name: daniel
       password: luda1202
     jwt:
-      expirationMinutes: 30
       secretKey: TUkgQ09OVFJBU0XDkUEgRVMgTVVZIFNFR1VSQSBFUyBEQU5JRUwxMjAyIGx1ZGExMjAyIGphamE=
       
 spring:
@@ -35,7 +34,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true        
     
 eureka:
