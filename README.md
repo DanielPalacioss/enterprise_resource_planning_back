@@ -1,10 +1,11 @@
 📦 enterprise_resource_planning_back
 Backend en Spring Boot para un sistema de planificación de recursos empresariales (ERP).
 
-📝 Descripción
+📝 Descripción:
+
 Este proyecto implementa el backend de un ERP usando Spring Boot. Proporciona una API REST para gestionar entidades como clientes, productos, órdenes, stock y usuarios. Se integra con bases de datos, validación, seguridad y manejo de errores.
 
-✨ Características
+✨ Características:
 Estructura modular y organizada por capas (controller-service-repository-model).
 
 API REST con endpoints CRUD.
