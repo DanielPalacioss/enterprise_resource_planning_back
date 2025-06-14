@@ -46,11 +46,14 @@ mvn spring-boot:run
 ⚙️ Configuración
 En application.properties (o application.yml), configura:
 
-Producción
 spring.datasource.url=jdbc:postgresql://...
+
 spring.datasource.username=...
+
 spring.datasource.password=...
+
 spring.jpa.hibernate.ddl-auto=update
+
 Puedes cambiar la base de datos y credenciales según tus necesidades.
 
 # 📌 Endpoints principales
